@@ -41,6 +41,7 @@ export interface ContactData {
   citta: string
   indirizzo: string
   note?: string
+  privacy_consent?: boolean
 }
 
 export interface Configuration {

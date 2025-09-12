@@ -21,8 +21,29 @@ export function ImageUpload({ value, onChange, label = "Immagine", className }: 
   const [dragActive, setDragActive] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  const validateFile = (file: File): string | null => {
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
+    if (!allowedTypes.includes(file.type)) {
+      return "Formato file non supportato. Usa JPEG, PNG o WebP."
+    }
+
+    const maxSize = 5 * 1024 * 1024 // 5MB
+    if (file.size > maxSize) {
+      const fileSizeMB = (file.size / (1024 * 1024)).toFixed(1)
+      return `File troppo grande (${fileSizeMB}MB). Dimensione massima: 5MB.`
+    }
+
+    return null
+  }
+
   const handleFileSelect = async (file: File) => {
     if (!file) return
+
+    const validationError = validateFile(file)
+    if (validationError) {
+      alert(validationError)
+      return
+    }
 
     setIsUploading(true)
     try {
@@ -30,7 +51,8 @@ export function ImageUpload({ value, onChange, label = "Immagine", className }: 
       onChange(result.url)
     } catch (error) {
       console.error("Upload error:", error)
-      alert("Errore durante l'upload dell'immagine")
+      const errorMessage = error instanceof Error ? error.message : "Errore durante l'upload dell'immagine"
+      alert(errorMessage)
     } finally {
       setIsUploading(false)
     }

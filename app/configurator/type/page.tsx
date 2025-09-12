@@ -16,13 +16,18 @@ export default function TypePage() {
   useEffect(() => {
     async function fetchPergolaTypes() {
       const supabase = createClient()
-      const { data, error } = await supabase.from("configuratorelegno_pergola_types").select("*").order("created_at")
 
-      if (error) {
-        console.error("Error fetching pergola types:", error)
+      const { data: typesData, error: typesError } = await supabase
+        .from("configuratorelegno_pergola_types")
+        .select("*")
+        .order("created_at")
+
+      if (typesError) {
+        console.error("Error fetching pergola types:", typesError)
       } else {
-        setPergolaTypes(data || [])
+        setPergolaTypes(typesData || [])
       }
+
       setLoading(false)
     }
 
@@ -38,7 +43,7 @@ export default function TypePage() {
       <ConfiguratorLayout currentStep={1}>
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Caricamento tipi pergola...</p>
+          <p className="mt-4 text-foreground/70">Caricamento tipi pergola...</p>
         </div>
       </ConfiguratorLayout>
     )
@@ -49,7 +54,7 @@ export default function TypePage() {
       <div className="space-y-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4">Scegli il Tipo di Pergola</h2>
-          <p className="text-muted-foreground text-lg">Seleziona il tipo di pergola più adatto al tuo spazio esterno</p>
+          <p className="text-foreground/80 text-lg">Seleziona il tipo di pergola più adatto al tuo spazio esterno</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -64,9 +69,13 @@ export default function TypePage() {
               <CardHeader>
                 <div className="aspect-video rounded-lg overflow-hidden mb-4">
                   <img
-                    src={type.image_url || "/placeholder.svg"}
+                    src={type.image_url || "/placeholder.svg?height=300&width=400&text=Immagine+Non+Disponibile"}
                     alt={type.name}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement
+                      target.src = "/placeholder.svg?height=300&width=400&text=Immagine+Non+Disponibile"
+                    }}
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -80,7 +89,7 @@ export default function TypePage() {
         </div>
 
         {!type_name && (
-          <div className="text-center text-muted-foreground">
+          <div className="text-center text-foreground/70">
             <p>Seleziona un tipo di pergola per continuare</p>
           </div>
         )}

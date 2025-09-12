@@ -5,9 +5,54 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useConfigurationStore } from "@/lib/store"
+import { useEffect, useState } from "react"
+
+interface HomepageSettings {
+  dimensions_addossata_image: string
+  dimensions_libera_image: string
+}
+
+interface PergolaTipo {
+  id: number
+  name: string
+  description: string
+  image_url: string | null
+}
 
 export default function DimensionsPage() {
   const { type_name, width, depth, height, setDimensions, isStepValid } = useConfigurationStore()
+  const [homepageSettings, setHomepageSettings] = useState<HomepageSettings | null>(null)
+  const [pergolaTipi, setPergolaTipi] = useState<PergolaTipo[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchHomepageSettings = async () => {
+      try {
+        console.log("[v0] Fetching homepage settings...")
+        const response = await fetch("/api/homepage-settings")
+        if (response.ok) {
+          const data = await response.json()
+          console.log("[v0] Homepage settings loaded:", data)
+          setHomepageSettings(data)
+        } else {
+          console.log("[v0] Failed to fetch homepage settings:", response.status)
+        }
+      } catch (error) {
+        console.error("[v0] Error fetching homepage settings:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    // Initial fetch
+    fetchHomepageSettings()
+
+    // Set up polling every 10 seconds for real-time updates
+    const interval = setInterval(fetchHomepageSettings, 10000)
+
+    // Cleanup interval on unmount
+    return () => clearInterval(interval)
+  }, [])
 
   const handleDimensionChange = (dimension: "width" | "depth" | "height", value: string) => {
     const numValue = Number.parseInt(value) || 0
@@ -16,10 +61,26 @@ export default function DimensionsPage() {
   }
 
   const getImageForType = () => {
-    if (type_name === "Pergola Addossata") {
-      return "/placeholder.svg?height=400&width=600&text=Pergola+Addossata"
+    if (loading) {
+      return "/placeholder.svg?height=400&width=600&text=Caricamento..."
     }
-    return "/placeholder.svg?height=400&width=600&text=Pergola+Libera"
+
+    if (!homepageSettings) {
+      return "/placeholder.svg?height=400&width=600&text=Immagine+Non+Disponibile"
+    }
+
+    const typeNameLower = type_name?.toLowerCase() || ""
+
+    if (typeNameLower.includes("addossata")) {
+      const image = homepageSettings.dimensions_addossata_image
+      return image || "/placeholder.svg?height=400&width=600&text=Pergola+Addossata"
+    } else if (typeNameLower.includes("indipendente") || typeNameLower.includes("libera")) {
+      const image = homepageSettings.dimensions_libera_image
+      return image || "/placeholder.svg?height=400&width=600&text=Pergola+Indipendente"
+    }
+
+    // Fallback for any other type
+    return "/placeholder.svg?height=400&width=600&text=Seleziona+Tipo+Pergola"
   }
 
   return (
@@ -43,7 +104,12 @@ export default function DimensionsPage() {
               src={getImageForType() || "/placeholder.svg"}
               alt={`Dimensioni ${type_name}`}
               className="w-full h-auto rounded-lg shadow-sm"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement
+                target.src = "/placeholder.svg?height=400&width=600&text=Immagine+Non+Disponibile"
+              }}
             />
+            {loading && <div className="text-center mt-2 text-sm text-muted-foreground">Caricamento immagine...</div>}
           </div>
         </div>
 

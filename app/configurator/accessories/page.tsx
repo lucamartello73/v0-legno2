@@ -10,9 +10,9 @@ import { createClient } from "@/lib/supabase/client"
 import type { Accessory } from "@/lib/types"
 
 export default function AccessoriesPage() {
-  const [accessories, accessoriesState] = useState<Accessory[]>([])
+  const [accessories, setAccessories] = useState<Accessory[]>([])
   const [loading, setLoading] = useState(true)
-  const { accessory_names, total_price, setTotalPrice } = useConfigurationStore()
+  const { accessory_names } = useConfigurationStore()
 
   useEffect(() => {
     async function fetchAccessories() {
@@ -22,20 +22,13 @@ export default function AccessoriesPage() {
       if (error) {
         console.error("Error fetching accessories:", error)
       } else {
-        accessoriesState(data || [])
+        setAccessories(data || [])
       }
       setLoading(false)
     }
 
     fetchAccessories()
   }, [])
-
-  useEffect(() => {
-    // Calculate total price when accessories change
-    const selectedAccessories = accessories.filter((acc) => accessory_names.includes(acc.name))
-    const total = selectedAccessories.reduce((sum, acc) => sum + acc.price, 0)
-    setTotalPrice(total)
-  }, [accessory_names, accessories, setTotalPrice])
 
   const handleAccessoryToggle = (accessory: Accessory, checked: boolean) => {
     let newIds: string[] = []
@@ -50,13 +43,6 @@ export default function AccessoriesPage() {
     }
 
     useConfigurationStore.getState().setAccessories(newIds, newNames)
-  }
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-    }).format(price)
   }
 
   if (loading) {
@@ -79,17 +65,6 @@ export default function AccessoriesPage() {
             Aggiungi accessori per personalizzare la tua pergola (opzionale)
           </p>
         </div>
-
-        {/* Total Price Display */}
-        {total_price > 0 && (
-          <Card className="bg-secondary/10 border-secondary/30">
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-secondary">Totale Accessori: {formatPrice(total_price)}</h3>
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         <div className="grid md:grid-cols-2 gap-6">
           {accessories.map((accessory) => {
@@ -118,7 +93,6 @@ export default function AccessoriesPage() {
                     />
                   </div>
                   <CardDescription className="mb-3">{accessory.description}</CardDescription>
-                  <div className="text-xl font-bold text-secondary">{formatPrice(accessory.price)}</div>
                 </CardHeader>
               </Card>
             )
@@ -132,20 +106,12 @@ export default function AccessoriesPage() {
               <h4 className="font-medium mb-3">Accessori Selezionati:</h4>
               <div className="space-y-2">
                 {accessory_names.map((name) => {
-                  const accessory = accessories.find((acc) => acc.name === name)
                   return (
                     <div key={name} className="flex justify-between items-center">
                       <Badge variant="secondary">{name}</Badge>
-                      {accessory && <span className="font-medium">{formatPrice(accessory.price)}</span>}
                     </div>
                   )
                 })}
-              </div>
-              <div className="border-t mt-4 pt-4">
-                <div className="flex justify-between items-center text-lg font-bold">
-                  <span>Totale:</span>
-                  <span className="text-secondary">{formatPrice(total_price)}</span>
-                </div>
               </div>
             </CardContent>
           </Card>

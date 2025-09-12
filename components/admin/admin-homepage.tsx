@@ -48,7 +48,15 @@ export function AdminHomepage() {
     setIsSaving(true)
     try {
       await homepageSettingsApi.update(settings)
-      alert("Impostazioni homepage salvate con successo!")
+      const successMessage = document.createElement("div")
+      successMessage.className = "fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50"
+      successMessage.textContent =
+        "Impostazioni salvate! Le immagini si aggiorneranno automaticamente nel configuratore."
+      document.body.appendChild(successMessage)
+
+      setTimeout(() => {
+        document.body.removeChild(successMessage)
+      }, 4000)
     } catch (error) {
       console.error("Error saving homepage settings:", error)
       alert("Errore nel salvataggio delle impostazioni")

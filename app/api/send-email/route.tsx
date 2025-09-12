@@ -1,5 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server"
 
+const SENDWITH_API_KEY = "7d4db474cad47167840902714f1dbc8583792fb2c077e935bf21292331776b54"
+const SENDWITH_API_URL = "https://app.sendwith.email/api/send"
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -33,24 +36,52 @@ export async function POST(request: NextRequest) {
       <p><em>Richiesta inviata il ${new Date().toLocaleString("it-IT")}</em></p>
     `
 
-    // In a real implementation, you would integrate with an email service like:
-    // - SendGrid
-    // - Resend
-    // - Nodemailer with SMTP
-    // - AWS SES
+    const emailData = {
+      message: {
+        to: [
+          {
+            email: "info@martello1930.net",
+          },
+        ],
+        from: {
+          email: "info@martello1930.net",
+        },
+        subject: `Richiesta Preventivo Pergola - ${body.contact_data?.nome} ${body.contact_data?.cognome}`,
+        body: emailContent,
+      },
+    }
 
-    // For now, we'll simulate email sending
-    console.log("Email would be sent with content:", emailContent)
+    const response = await fetch(SENDWITH_API_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${SENDWITH_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(emailData),
+    })
 
-    // Simulate email sending delay
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    if (!response.ok) {
+      const errorData = await response.text()
+      console.error("SendWith API error:", response.status, errorData)
+      throw new Error(`SendWith API error: ${response.status}`)
+    }
+
+    const responseData = await response.json()
+    console.log("Email sent successfully via SendWith:", responseData)
 
     return NextResponse.json({
       success: true,
       message: "Email sent successfully",
+      sendWithResponse: responseData,
     })
   } catch (error) {
     console.error("Error sending email:", error)
-    return NextResponse.json({ error: "Failed to send email" }, { status: 500 })
+    return NextResponse.json(
+      {
+        error: "Failed to send email",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    )
   }
 }

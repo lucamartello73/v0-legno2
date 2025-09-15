@@ -144,8 +144,10 @@ export function AdminPavimenti() {
                         id="new-description"
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        placeholder="Descrizione del tipo pavimentazione"
-                        rows={3}
+                        placeholder="Descrivi le caratteristiche principali del tipo di pavimentazione (materiale, finitura, resistenza, manutenzione, ecc.)"
+                        rows={4}
+                        characterLimit={500}
+                        helperText="Fornisci una descrizione dettagliata che aiuti i clienti a comprendere le caratteristiche e i vantaggi di questo tipo di pavimentazione."
                       />
                     </div>
                   </div>
@@ -193,7 +195,9 @@ export function AdminPavimenti() {
                             <Textarea
                               value={formData.description}
                               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                              rows={3}
+                              rows={4}
+                              characterLimit={500}
+                              helperText="Fornisci una descrizione dettagliata che aiuti i clienti a comprendere le caratteristiche e i vantaggi di questo tipo di pavimentazione."
                             />
                           </div>
                         </div>

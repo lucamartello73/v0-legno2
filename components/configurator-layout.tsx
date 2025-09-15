@@ -91,7 +91,7 @@ export function ConfiguratorLayout({ children, currentStep, nextHref, prevHref }
                 <Button
                   asChild
                   variant="outline"
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
+                  className="bg-black/30 border-white/40 text-white hover:bg-black/40 backdrop-blur-sm"
                 >
                   <Link href={prevHref}>
                     <ChevronLeft className="mr-2 h-4 w-4" />

@@ -144,8 +144,10 @@ export function AdminPergole() {
                         id="new-description"
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        placeholder="Descrizione del tipo pergola"
-                        rows={3}
+                        placeholder="Descrivi le caratteristiche della pergola (stile, materiali, dimensioni consigliate, utilizzo ideale, ecc.)"
+                        rows={4}
+                        characterLimit={500}
+                        helperText="Fornisci una descrizione dettagliata che aiuti i clienti a comprendere lo stile e l'utilizzo ideale di questo tipo di pergola."
                       />
                     </div>
                   </div>
@@ -193,7 +195,9 @@ export function AdminPergole() {
                             <Textarea
                               value={formData.description}
                               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                              rows={3}
+                              rows={4}
+                              characterLimit={500}
+                              helperText="Fornisci una descrizione dettagliata che aiuti i clienti a comprendere lo stile e l'utilizzo ideale di questo tipo di pergola."
                             />
                           </div>
                         </div>

@@ -19,7 +19,7 @@
   --secondary-foreground: oklch(0.145 0 0);
 
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: oklch(0.45 0 0);
 
   /* Updated to exact amber-500/600 values from reference */
   --accent: oklch(0.847 0.183 83.87); /* Amber-500 exact match for selections */
@@ -67,7 +67,7 @@
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
+  --muted-foreground: oklch(0.75 0 0);
   --accent: oklch(0.847 0.183 83.87); /* Keep amber consistent in dark mode */
   --accent-foreground: oklch(0.145 0 0);
   --destructive: oklch(0.396 0.141 25.723);

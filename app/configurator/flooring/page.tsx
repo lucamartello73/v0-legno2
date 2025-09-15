@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react"
 import { ConfiguratorLayout } from "@/components/configurator-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Check } from "lucide-react"
 import { useConfigurationStore } from "@/lib/store"
 import { createClient } from "@/lib/supabase/client"
 import type { FlooringType } from "@/lib/types"
@@ -30,20 +31,22 @@ export default function FlooringPage() {
     fetchFlooringTypes()
   }, [])
 
-  const handleFlooringToggle = (flooring: FlooringType, checked: boolean) => {
-    let newIds: string[] = []
-    let newNames: string[] = []
+  const handleFlooringToggle = (flooring: FlooringType) => {
+    const isSelected = flooring_names.includes(flooring.name)
+    let newNames: string[]
 
-    if (checked) {
-      newNames = [...flooring_names, flooring.name]
-      newIds = [...flooring_names, flooring.id] // Using names as IDs for simplicity
+    if (isSelected) {
+      // If already selected, deselect it
+      newNames = []
     } else {
-      newNames = flooring_names.filter((name) => name !== flooring.name)
-      newIds = flooring_names.filter((name) => name !== flooring.name)
+      // Replace any previous selection with the new one
+      newNames = [flooring.name]
     }
 
-    setFlooring(newIds, newNames)
+    setFlooring(newNames, newNames)
   }
+
+  const hasImages = flooringTypes.some((flooring) => flooring.image_url && flooring.image_url !== "/placeholder.svg")
 
   if (loading) {
     return (
@@ -61,47 +64,80 @@ export default function FlooringPage() {
       <div className="space-y-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4">Pavimentazione</h2>
-          <p className="text-muted-foreground text-lg">Seleziona i tipi di pavimentazione desiderati (opzionale)</p>
+          <p className="text-muted-foreground text-lg">Seleziona il tipo di pavimentazione desiderato (opzionale)</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {flooringTypes.map((flooring) => {
-            const isSelected = flooring_names.includes(flooring.name)
+        {hasImages ? (
+          // Show cards with images when images are available
+          <div className="grid md:grid-cols-3 gap-6">
+            {flooringTypes.map((flooring) => {
+              const isSelected = flooring_names.includes(flooring.name)
 
-            return (
-              <Card
-                key={flooring.id}
-                className={`transition-all duration-300 hover-lift ${
-                  isSelected ? "ring-2 ring-primary bg-primary/5" : "hover:shadow-lg"
-                }`}
-              >
-                <CardHeader>
-                  <div className="aspect-video rounded-lg overflow-hidden mb-4">
-                    <img
-                      src={flooring.image_url || "/placeholder.svg"}
-                      alt={flooring.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">{flooring.name}</CardTitle>
-                    <Checkbox
-                      checked={isSelected}
-                      onCheckedChange={(checked) => handleFlooringToggle(flooring, checked as boolean)}
-                    />
-                  </div>
-                  <CardDescription>{flooring.description}</CardDescription>
-                </CardHeader>
-              </Card>
-            )
-          })}
-        </div>
+              return (
+                <Card
+                  key={flooring.id}
+                  className={`transition-all duration-300 hover-lift cursor-pointer ${
+                    isSelected ? "ring-2 ring-primary bg-primary/5" : "hover:shadow-lg"
+                  }`}
+                  onClick={() => handleFlooringToggle(flooring)}
+                >
+                  <CardHeader>
+                    <div className="aspect-video rounded-lg overflow-hidden mb-4">
+                      <img
+                        src={flooring.image_url || "/placeholder.svg"}
+                        alt={flooring.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg">{flooring.name}</CardTitle>
+                      {isSelected && (
+                        <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                          <Check className="w-4 h-4 text-primary-foreground" />
+                        </div>
+                      )}
+                    </div>
+                    <CardDescription>{flooring.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              )
+            })}
+          </div>
+        ) : (
+          // Show simple buttons when no images are available
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {flooringTypes.map((flooring) => {
+              const isSelected = flooring_names.includes(flooring.name)
 
-        {/* Selection Summary */}
+              return (
+                <Button
+                  key={flooring.id}
+                  variant={isSelected ? "default" : "outline"}
+                  size="lg"
+                  className={`h-auto min-h-[120px] p-6 flex flex-col items-center justify-center gap-3 transition-all duration-300 text-wrap ${
+                    isSelected ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+                  }`}
+                  onClick={() => handleFlooringToggle(flooring)}
+                >
+                  <div className="flex items-center gap-2 text-center">
+                    <span className="font-medium text-lg leading-tight">{flooring.name}</span>
+                    {isSelected && <Check className="w-5 h-5 flex-shrink-0" />}
+                  </div>
+                  {flooring.description && (
+                    <p className="text-sm opacity-80 text-center leading-relaxed line-clamp-3 break-words max-w-full">
+                      {flooring.description}
+                    </p>
+                  )}
+                </Button>
+              )
+            })}
+          </div>
+        )}
+
         {flooring_names.length > 0 && (
           <Card className="bg-primary/5 border-primary/20">
             <CardContent className="pt-6">
-              <h4 className="font-medium mb-3">Pavimentazioni Selezionate:</h4>
+              <h4 className="font-medium mb-3">Pavimentazione Selezionata:</h4>
               <div className="flex flex-wrap gap-2">
                 {flooring_names.map((name) => (
                   <Badge key={name} variant="secondary">

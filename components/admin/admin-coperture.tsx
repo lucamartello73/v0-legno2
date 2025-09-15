@@ -144,8 +144,10 @@ export function AdminCoperture() {
                         id="new-description"
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        placeholder="Descrizione del tipo copertura"
-                        rows={3}
+                        placeholder="Descrivi le caratteristiche della copertura (materiale, resistenza agli agenti atmosferici, isolamento, estetica, ecc.)"
+                        rows={4}
+                        characterLimit={500}
+                        helperText="Fornisci una descrizione completa che evidenzi i vantaggi e le caratteristiche tecniche di questo tipo di copertura."
                       />
                     </div>
                   </div>
@@ -193,7 +195,9 @@ export function AdminCoperture() {
                             <Textarea
                               value={formData.description}
                               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                              rows={3}
+                              rows={4}
+                              characterLimit={500}
+                              helperText="Fornisci una descrizione completa che evidenzi i vantaggi e le caratteristiche tecniche di questo tipo di copertura."
                             />
                           </div>
                         </div>

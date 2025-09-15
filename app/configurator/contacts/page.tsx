@@ -87,37 +87,54 @@ export default function ContactsPage() {
           </p>
         </div>
 
-        <Card className="border-2 border-primary/20 bg-primary/5">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-primary">Scegli il Tipo di Servizio</CardTitle>
-            <p className="text-muted-foreground">Seleziona la modalità di fornitura che preferisci</p>
+        <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg">
+          <CardHeader className="text-center pb-6">
+            <CardTitle className="text-3xl font-bold text-primary mb-2">Scegli il Tipo di Servizio</CardTitle>
+            <p className="text-muted-foreground text-lg">Seleziona la modalità di fornitura che preferisci</p>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-8 pb-8">
             <RadioGroup
               value={service_type || ""}
               onValueChange={(value) => setService(value as "chiavi_in_mano" | "fai_da_te")}
-              className="grid md:grid-cols-2 gap-6"
+              className="grid md:grid-cols-2 gap-8"
             >
               <div
-                className={`p-6 rounded-lg border-2 transition-all cursor-pointer ${
+                className={`relative p-8 rounded-xl border-3 transition-all duration-300 cursor-pointer transform hover:scale-105 ${
                   service_type === "chiavi_in_mano"
-                    ? "border-primary bg-primary/10 ring-2 ring-primary/20"
-                    : "border-muted hover:border-primary/50"
+                    ? "border-primary bg-gradient-to-br from-primary/15 to-primary/25 ring-4 ring-primary/30 shadow-xl"
+                    : "border-muted bg-white hover:border-primary/60 hover:shadow-lg"
                 }`}
               >
-                <div className="flex items-start space-x-3">
-                  <RadioGroupItem value="chiavi_in_mano" id="chiavi_in_mano" className="mt-1" />
+                {service_type === "chiavi_in_mano" && (
+                  <div className="absolute -top-3 -right-3 bg-primary text-primary-foreground rounded-full p-2 shadow-lg">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                )}
+                <div className="flex items-start space-x-4">
+                  <RadioGroupItem value="chiavi_in_mano" id="chiavi_in_mano" className="mt-2 scale-125" />
                   <Label htmlFor="chiavi_in_mano" className="cursor-pointer flex-1">
-                    <div className="space-y-2">
-                      <div className="font-bold text-lg text-primary">Chiavi in Mano</div>
-                      <div className="font-medium">Con Trasporto e Montaggio</div>
-                      <div className="text-sm text-muted-foreground">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <div className="text-2xl font-bold text-primary">🔑 Chiavi in Mano</div>
+                        <div className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                          COMPLETO
+                        </div>
+                      </div>
+                      <div className="text-lg font-semibold text-foreground">Con Trasporto e Montaggio</div>
+                      <div className="text-muted-foreground leading-relaxed">
                         Servizio completo: progettazione, fornitura, trasporto e installazione professionale
                       </div>
-                      <div className="text-xs text-muted-foreground mt-2">
-                        ✓ Sopralluogo gratuito
-                        <br />✓ Montaggio professionale
-                        <br />✓ Garanzia completa
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-2">
+                        <div className="text-sm font-medium text-green-800">✓ Sopralluogo gratuito</div>
+                        <div className="text-sm font-medium text-green-800">✓ Montaggio professionale</div>
+                        <div className="text-sm font-medium text-green-800">✓ Garanzia completa</div>
+                        <div className="text-sm font-medium text-green-800">✓ Assistenza post-vendita</div>
                       </div>
                     </div>
                   </Label>
@@ -125,25 +142,42 @@ export default function ContactsPage() {
               </div>
 
               <div
-                className={`p-6 rounded-lg border-2 transition-all cursor-pointer ${
+                className={`relative p-8 rounded-xl border-3 transition-all duration-300 cursor-pointer transform hover:scale-105 ${
                   service_type === "fai_da_te"
-                    ? "border-primary bg-primary/10 ring-2 ring-primary/20"
-                    : "border-muted hover:border-primary/50"
+                    ? "border-primary bg-gradient-to-br from-primary/15 to-primary/25 ring-4 ring-primary/30 shadow-xl"
+                    : "border-muted bg-white hover:border-primary/60 hover:shadow-lg"
                 }`}
               >
-                <div className="flex items-start space-x-3">
-                  <RadioGroupItem value="fai_da_te" id="fai_da_te" className="mt-1" />
+                {service_type === "fai_da_te" && (
+                  <div className="absolute -top-3 -right-3 bg-primary text-primary-foreground rounded-full p-2 shadow-lg">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                )}
+                <div className="flex items-start space-x-4">
+                  <RadioGroupItem value="fai_da_te" id="fai_da_te" className="mt-2 scale-125" />
                   <Label htmlFor="fai_da_te" className="cursor-pointer flex-1">
-                    <div className="space-y-2">
-                      <div className="font-bold text-lg text-primary">Solo Fornitura</div>
-                      <div className="font-medium">Fai da Te</div>
-                      <div className="text-sm text-muted-foreground">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <div className="text-2xl font-bold text-primary">📦 Solo Fornitura</div>
+                        <div className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-medium">
+                          ECONOMICO
+                        </div>
+                      </div>
+                      <div className="text-lg font-semibold text-foreground">Fai da Te</div>
+                      <div className="text-muted-foreground leading-relaxed">
                         Solo materiali con istruzioni dettagliate per il montaggio autonomo
                       </div>
-                      <div className="text-xs text-muted-foreground mt-2">
-                        ✓ Prezzo più conveniente
-                        <br />✓ Istruzioni dettagliate
-                        <br />✓ Supporto telefonico
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-2">
+                        <div className="text-sm font-medium text-blue-800">✓ Prezzo più conveniente</div>
+                        <div className="text-sm font-medium text-blue-800">✓ Istruzioni dettagliate</div>
+                        <div className="text-sm font-medium text-blue-800">✓ Supporto telefonico</div>
+                        <div className="text-sm font-medium text-blue-800">✓ Video tutorial inclusi</div>
                       </div>
                     </div>
                   </Label>
@@ -275,29 +309,110 @@ export default function ContactsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Preferenza di Contatto</CardTitle>
+              <p className="text-muted-foreground">Scegli come preferisci essere contattato per il preventivo</p>
             </CardHeader>
             <CardContent>
               <RadioGroup
                 value={contact_preference || ""}
                 onValueChange={(value) => setContactPreference(value as "email" | "telefono" | "whatsapp")}
+                className="space-y-4"
               >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="email" id="email_pref" />
-                  <Label htmlFor="email_pref" className="cursor-pointer">
-                    Email
-                  </Label>
+                <div
+                  className={`relative p-6 rounded-xl border-2 transition-all duration-300 cursor-pointer transform hover:scale-105 ${
+                    contact_preference === "email"
+                      ? "border-primary bg-gradient-to-br from-primary/15 to-primary/25 ring-2 ring-primary/30 shadow-lg"
+                      : "border-muted bg-white hover:border-primary/60 hover:shadow-md"
+                  }`}
+                >
+                  {contact_preference === "email" && (
+                    <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full p-1.5 shadow-lg">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  )}
+                  <div className="flex items-center space-x-4">
+                    <RadioGroupItem value="email" id="email_pref" className="scale-125" />
+                    <Label htmlFor="email_pref" className="cursor-pointer flex-1">
+                      <div className="flex items-center gap-3">
+                        <div className="text-2xl">📧</div>
+                        <div>
+                          <div className="text-lg font-semibold">Email</div>
+                          <div className="text-sm text-muted-foreground">Ricevi il preventivo via email</div>
+                        </div>
+                      </div>
+                    </Label>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="telefono" id="telefono_pref" />
-                  <Label htmlFor="telefono_pref" className="cursor-pointer">
-                    Telefono
-                  </Label>
+
+                <div
+                  className={`relative p-6 rounded-xl border-2 transition-all duration-300 cursor-pointer transform hover:scale-105 ${
+                    contact_preference === "telefono"
+                      ? "border-primary bg-gradient-to-br from-primary/15 to-primary/25 ring-2 ring-primary/30 shadow-lg"
+                      : "border-muted bg-white hover:border-primary/60 hover:shadow-md"
+                  }`}
+                >
+                  {contact_preference === "telefono" && (
+                    <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full p-1.5 shadow-lg">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  )}
+                  <div className="flex items-center space-x-4">
+                    <RadioGroupItem value="telefono" id="telefono_pref" className="scale-125" />
+                    <Label htmlFor="telefono_pref" className="cursor-pointer flex-1">
+                      <div className="flex items-center gap-3">
+                        <div className="text-2xl">📞</div>
+                        <div>
+                          <div className="text-lg font-semibold">Telefono</div>
+                          <div className="text-sm text-muted-foreground">
+                            Chiamata diretta per discutere il preventivo
+                          </div>
+                        </div>
+                      </div>
+                    </Label>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="whatsapp" id="whatsapp_pref" />
-                  <Label htmlFor="whatsapp_pref" className="cursor-pointer">
-                    WhatsApp
-                  </Label>
+
+                <div
+                  className={`relative p-6 rounded-xl border-2 transition-all duration-300 cursor-pointer transform hover:scale-105 ${
+                    contact_preference === "whatsapp"
+                      ? "border-primary bg-gradient-to-br from-primary/15 to-primary/25 ring-2 ring-primary/30 shadow-lg"
+                      : "border-muted bg-white hover:border-primary/60 hover:shadow-md"
+                  }`}
+                >
+                  {contact_preference === "whatsapp" && (
+                    <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full p-1.5 shadow-lg">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  )}
+                  <div className="flex items-center space-x-4">
+                    <RadioGroupItem value="whatsapp" id="whatsapp_pref" className="scale-125" />
+                    <Label htmlFor="whatsapp_pref" className="cursor-pointer flex-1">
+                      <div className="flex items-center gap-3">
+                        <div className="text-2xl">💬</div>
+                        <div>
+                          <div className="text-lg font-semibold">WhatsApp</div>
+                          <div className="text-sm text-muted-foreground">Chat veloce e comoda su WhatsApp</div>
+                        </div>
+                      </div>
+                    </Label>
+                  </div>
                 </div>
               </RadioGroup>
             </CardContent>

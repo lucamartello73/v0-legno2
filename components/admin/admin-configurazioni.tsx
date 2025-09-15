@@ -114,7 +114,7 @@ export function AdminConfigurazioni() {
 
   const getStatusBadge = (status: string | undefined) => {
     const currentStatus = status || "pending"
-    const config = statusConfig[currentStatus as keyof typeof statusConfig]
+    const config = statusConfig[currentStatus as keyof typeof statusConfig] || statusConfig.pending
     const Icon = config.icon
 
     return (

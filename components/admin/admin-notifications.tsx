@@ -218,17 +218,19 @@ export function AdminNotifications() {
   }
 
   const getPriorityBadge = (priority: string) => {
+    const safePriority = priority && typeof priority === "string" ? priority : "normal"
+
     const colors = {
       low: "bg-gray-500",
       normal: "bg-blue-500",
       high: "bg-orange-500",
       urgent: "bg-red-500",
     }
-    return (
-      <Badge className={`${colors[priority as keyof typeof colors]} text-white text-xs`}>
-        {priority.toUpperCase()}
-      </Badge>
-    )
+
+    const colorKey = safePriority.toLowerCase() as keyof typeof colors
+    const color = colors[colorKey] || colors.normal
+
+    return <Badge className={`${color} text-white text-xs`}>{safePriority.toUpperCase()}</Badge>
   }
 
   const formatDate = (dateString: string) => {

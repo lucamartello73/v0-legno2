@@ -100,9 +100,28 @@ export function AdminAccessori() {
       }
 
       for (const accessory of accessoriesToUpdate) {
-        // Create a detailed query based on name and description
-        const imageQuery = `${accessory.name} ${accessory.description} pergola outdoor accessory high quality product photo`
-        const imageUrl = `/placeholder.svg?height=300&width=400&query=${encodeURIComponent(imageQuery)}`
+        let imageUrl = ""
+
+        // Map accessory types to actual image files
+        if (accessory.name.toLowerCase().includes("tenda")) {
+          imageUrl = "/retractable-side-awning-pergola-shade.jpg"
+        } else if (
+          accessory.name.toLowerCase().includes("illuminazione") ||
+          accessory.name.toLowerCase().includes("led")
+        ) {
+          imageUrl = "/led-lighting-system-pergola-outdoor.jpg"
+        } else if (accessory.name.toLowerCase().includes("ventilatore")) {
+          imageUrl = "/ceiling-fan-pergola-outdoor-remote-control.jpg"
+        } else if (accessory.name.toLowerCase().includes("rullo")) {
+          imageUrl = "/motorized-roller-blinds-pergola-outdoor.jpg"
+        } else if (accessory.name.toLowerCase().includes("riscaldatore")) {
+          imageUrl = "/infrared-heater-outdoor-pergola-patio.jpg"
+        } else if (accessory.name.toLowerCase().includes("zanzariere")) {
+          imageUrl = "/retractable-mosquito-net-pergola-outdoor.jpg"
+        } else {
+          // Default fallback image for other accessories
+          imageUrl = "/retractable-side-awning-pergola-shade.jpg"
+        }
 
         await accessoriesApi.update({
           id: accessory.id,
@@ -118,6 +137,53 @@ export function AdminAccessori() {
     } catch (error) {
       console.error("Error generating images:", error)
       alert("Errore nella generazione delle immagini")
+    }
+  }
+
+  const generateImagesForAllAccessories = async () => {
+    if (!confirm("Vuoi rigenerare le immagini per TUTTI gli accessori? Questo sostituirà le immagini esistenti.")) {
+      return
+    }
+
+    try {
+      for (const accessory of accessories) {
+        let imageUrl = ""
+
+        // Map accessory types to actual image files
+        if (accessory.name.toLowerCase().includes("tenda")) {
+          imageUrl = "/retractable-side-awning-pergola-shade.jpg"
+        } else if (
+          accessory.name.toLowerCase().includes("illuminazione") ||
+          accessory.name.toLowerCase().includes("led")
+        ) {
+          imageUrl = "/led-lighting-system-pergola-outdoor.jpg"
+        } else if (accessory.name.toLowerCase().includes("ventilatore")) {
+          imageUrl = "/ceiling-fan-pergola-outdoor-remote-control.jpg"
+        } else if (accessory.name.toLowerCase().includes("rullo")) {
+          imageUrl = "/motorized-roller-blinds-pergola-outdoor.jpg"
+        } else if (accessory.name.toLowerCase().includes("riscaldatore")) {
+          imageUrl = "/infrared-heater-outdoor-pergola-patio.jpg"
+        } else if (accessory.name.toLowerCase().includes("zanzariere")) {
+          imageUrl = "/retractable-mosquito-net-pergola-outdoor.jpg"
+        } else {
+          // Default fallback image for other accessories
+          imageUrl = "/retractable-side-awning-pergola-shade.jpg"
+        }
+
+        await accessoriesApi.update({
+          id: accessory.id,
+          name: accessory.name,
+          description: accessory.description || "",
+          price: accessory.price,
+          image_url: imageUrl,
+        })
+      }
+
+      await loadAccessories()
+      alert(`Immagini rigenerate per tutti i ${accessories.length} accessori!`)
+    } catch (error) {
+      console.error("Error generating images:", error)
+      alert("Errore nella rigenerazione delle immagini")
     }
   }
 
@@ -218,7 +284,16 @@ export function AdminAccessori() {
                 disabled={isCreating || editingId !== null}
               >
                 <Edit className="mr-2 h-4 w-4" />
-                Genera Immagini
+                Genera Immagini Mancanti
+              </Button>
+              <Button
+                onClick={generateImagesForAllAccessories}
+                variant="outline"
+                className="text-orange-600 border-orange-600 hover:bg-orange-50 bg-transparent"
+                disabled={isCreating || editingId !== null}
+              >
+                <Edit className="mr-2 h-4 w-4" />
+                Rigenera Tutte le Immagini
               </Button>
               <Button
                 onClick={() => setIsCreating(true)}

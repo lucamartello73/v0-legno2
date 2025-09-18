@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator"
 import { useConfigurationStore } from "@/lib/store"
 import { CheckCircle, Mail, Phone, MessageCircle } from "lucide-react"
 import Link from "next/link"
+import { trackConfiguratorSubmit } from "@/lib/analytics"
 
 export default function SummaryPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -39,6 +40,8 @@ export default function SummaryPage() {
     setIsSubmitting(true)
 
     try {
+      trackConfiguratorSubmit(configuration)
+
       // Save configuration to database
       const response = await fetch("/api/configurations", {
         method: "POST",

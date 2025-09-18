@@ -9,6 +9,8 @@ import { Progress } from "@/components/ui/progress"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { useConfigurationStore } from "@/lib/store"
+import { trackConfiguratorStep, useConfiguratorAbandonTracking } from "@/lib/analytics"
+import { useEffect } from "react"
 
 interface ConfiguratorLayoutProps {
   children: React.ReactNode
@@ -31,6 +33,15 @@ const steps = [
 export function ConfiguratorLayout({ children, currentStep, nextHref, prevHref }: ConfiguratorLayoutProps) {
   const { isStepValid } = useConfigurationStore()
   const progress = (currentStep / steps.length) * 100
+  const cleanup = useConfiguratorAbandonTracking(currentStep)
+
+  useEffect(() => {
+    // Traccia l'ingresso nello step corrente
+    trackConfiguratorStep(currentStep)
+
+    // Setup tracking abbandono pagina
+    return cleanup
+  }, [currentStep])
 
   return (
     <div className="min-h-screen martello-gradient">

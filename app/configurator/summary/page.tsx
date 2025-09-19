@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator"
 import { useConfigurationStore } from "@/lib/store"
 import { CheckCircle, Mail, Phone, MessageCircle } from "lucide-react"
 import Link from "next/link"
-import { trackConfiguratorSubmit } from "@/lib/analytics"
+import { trackConfiguratorSubmit } from "@/lib/gtag"
 
 export default function SummaryPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)

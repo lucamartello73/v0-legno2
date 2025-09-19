@@ -22,13 +22,13 @@ export default function RootLayout({
   return (
     <html lang="it" className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}>
       <head>
-        <Script src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID" strategy="afterInteractive" />
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-R8NFXDFZQ1" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'GA_MEASUREMENT_ID', {
+            gtag('config', 'G-R8NFXDFZQ1', {
               page_title: 'LEGNO Configuratore Pergole',
               custom_map: {
                 'custom_parameter_1': 'configurator_name',

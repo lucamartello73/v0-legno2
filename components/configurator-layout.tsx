@@ -9,7 +9,7 @@ import { Progress } from "@/components/ui/progress"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { useConfigurationStore } from "@/lib/store"
-import { trackConfiguratorStep, useConfiguratorAbandonTracking } from "@/lib/analytics"
+import { trackConfiguratorStep, useConfiguratorAbandonTracking } from "@/lib/gtag"
 import { useEffect } from "react"
 
 interface ConfiguratorLayoutProps {

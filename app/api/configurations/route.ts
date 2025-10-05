@@ -57,3 +57,32 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const supabase = await createClient()
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get("id")
+
+    console.log("[v0] DELETE request received for ID:", id)
+
+    if (!id) {
+      console.log("[v0] No ID provided in DELETE request")
+      return NextResponse.json({ error: "ID configurazione richiesto" }, { status: 400 })
+    }
+
+    console.log("[v0] Attempting to delete configuration from database...")
+    const { error } = await supabase.from("configuratorelegno_configurations").delete().eq("id", id)
+
+    if (error) {
+      console.error("[v0] Database delete error:", error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    console.log("[v0] Configuration deleted successfully from database")
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("[v0] DELETE route error:", error)
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  }
+}

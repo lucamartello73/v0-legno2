@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog"
 import { PDFGenerator } from "@/components/pdf-generator"
 import { configurationsApi } from "@/lib/api"
-import { Calendar, User, Settings, Edit, CheckCircle, Clock, XCircle, AlertCircle } from "lucide-react"
+import { Calendar, User, Settings, Edit, CheckCircle, Clock, XCircle, AlertCircle, Trash2 } from "lucide-react"
 import { createBrowserClient } from "@supabase/ssr"
 import type { Configuration } from "@/lib/types"
 
@@ -35,6 +35,9 @@ export function AdminConfigurazioni() {
   const [newStatus, setNewStatus] = useState("")
   const [adminNotes, setAdminNotes] = useState("")
   const [isUpdating, setIsUpdating] = useState(false)
+  const [isDeleting, setIsDeleting] = useState<string | null>(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [configToDelete, setConfigToDelete] = useState<Configuration | null>(null)
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -72,7 +75,6 @@ export function AdminConfigurazioni() {
 
       if (error) throw error
 
-      // Update local state
       setConfigurations((prev) =>
         prev.map((config) =>
           config.id === selectedConfig.id ? { ...config, status: newStatus as any, admin_notes: adminNotes } : config,
@@ -89,10 +91,36 @@ export function AdminConfigurazioni() {
     }
   }
 
+  const deleteConfiguration = async (configId: string) => {
+    console.log("[v0] Starting delete for configuration:", configId)
+    setIsDeleting(configId)
+    try {
+      console.log("[v0] Calling configurationsApi.delete...")
+      await configurationsApi.delete(configId)
+      console.log("[v0] Delete API call successful")
+
+      setConfigurations((prev) => prev.filter((config) => config.id !== configId))
+      console.log("[v0] Configuration removed from state")
+
+      setDeleteDialogOpen(false)
+      setConfigToDelete(null)
+      console.log("[v0] Delete dialog closed")
+    } catch (error) {
+      console.error("[v0] Error deleting configuration:", error)
+    } finally {
+      setIsDeleting(null)
+    }
+  }
+
   const openStatusDialog = (config: Configuration) => {
     setSelectedConfig(config)
     setNewStatus(config.status || "pending")
     setAdminNotes(config.admin_notes || "")
+  }
+
+  const openDeleteDialog = (config: Configuration) => {
+    setConfigToDelete(config)
+    setDeleteDialogOpen(true)
   }
 
   const formatPrice = (price: number) => {
@@ -213,6 +241,15 @@ export function AdminConfigurazioni() {
                           </DialogFooter>
                         </DialogContent>
                       </Dialog>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openDeleteDialog(config)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Elimina
+                      </Button>
                     </div>
                   </div>
 
@@ -327,6 +364,45 @@ export function AdminConfigurazioni() {
             ))}
           </div>
         )}
+        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Conferma Eliminazione</DialogTitle>
+              <DialogDescription>
+                Sei sicuro di voler eliminare questo preventivo? Questa azione non può essere annullata.
+              </DialogDescription>
+            </DialogHeader>
+            {configToDelete && (
+              <div className="py-4">
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <p className="text-sm font-medium">
+                    Cliente: {configToDelete.contact_data?.nome} {configToDelete.contact_data?.cognome}
+                  </p>
+                  <p className="text-sm text-gray-600">Email: {configToDelete.contact_data?.email}</p>
+                  <p className="text-sm text-gray-600">
+                    Pergola: {configToDelete.type_name} - {configToDelete.width}×{configToDelete.depth}×
+                    {configToDelete.height} cm
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Data: {configToDelete.created_at && formatDate(configToDelete.created_at)}
+                  </p>
+                </div>
+              </div>
+            )}
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+                Annulla
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => configToDelete && deleteConfiguration(configToDelete.id)}
+                disabled={isDeleting === configToDelete?.id}
+              >
+                {isDeleting === configToDelete?.id ? "Eliminazione..." : "Elimina Definitivamente"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   )

@@ -111,6 +111,10 @@ export const configurationsApi = {
       method: "POST",
       body: JSON.stringify(data),
     }),
+  delete: (id: string) =>
+    apiRequest(`/api/configurations?id=${id}`, {
+      method: "DELETE",
+    }),
 }
 
 // Homepage Settings API

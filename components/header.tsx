@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-// import Image from "next/image" - Usando img standard per compatibilità
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 
@@ -22,19 +21,16 @@ export function Header() {
     <header
       className="fixed top-0 left-0 right-0 z-40 transition-all duration-300 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-200"
     >
-      <div className="container mx-auto px-6 py-3">
+      <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3">
-            <img
-              src="https://www.genspark.ai/api/files/s/bzknGl24"
-              alt="Martello 1930"
-              className="h-16 w-auto md:h-20"
-            />
-            <div className="flex flex-col">
-              <span className="text-xl font-bold text-[#1A1A1A]">MARTELLO 1930</span>
-              <span className="text-xs text-[#666666]">Configuratore Pergole</span>
-            </div>
+          {/* Logo Solo Testo */}
+          <Link href="/" className="flex flex-col">
+            <span className="text-2xl md:text-3xl font-bold text-[#1A1A1A] tracking-tight">
+              MARTELLO <span className="text-[#E91E63]">1930</span>
+            </span>
+            <span className="text-xs md:text-sm text-[#666666]">
+              Configuratore Pergole in Legno
+            </span>
           </Link>
 
           {/* Desktop Navigation */}

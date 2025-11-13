@@ -4,7 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { MapPin, Phone, Mail, Globe, MessageCircle } from "lucide-react"
 
-export function FooterMartello1930() {
+export default function FooterMartello1930() {
   return (
     <footer className="bg-gradient-to-br from-green-700 to-green-900 text-white mt-auto">
       {/* Header con Logo */}

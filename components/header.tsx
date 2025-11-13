@@ -23,14 +23,17 @@ export function Header() {
     >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo Solo Testo */}
-          <Link href="/" className="flex flex-col">
-            <span className="text-2xl md:text-3xl font-bold text-[#1A1A1A] tracking-tight">
-              MARTELLO <span className="text-[#E91E63]">1930</span>
-            </span>
-            <span className="text-xs md:text-sm text-[#666666]">
-              Configuratore Pergole in Legno
-            </span>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-3">
+            <img
+              src="/logo-martello-1930.png"
+              alt="Martello 1930"
+              className="h-14 w-auto md:h-16"
+            />
+            <div className="flex flex-col">
+              <span className="text-xl md:text-2xl font-bold text-[#1A1A1A]">MARTELLO 1930</span>
+              <span className="text-xs text-[#666666]">Configuratore Pergole</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

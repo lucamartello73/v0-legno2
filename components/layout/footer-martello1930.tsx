@@ -1,88 +1,125 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
-import { MapPin, Phone, Mail, Facebook, Instagram, Linkedin } from "lucide-react"
+import { MapPin, Phone, Mail, Globe, MessageCircle } from "lucide-react"
 
-export default function FooterMartello1930() {
+export function FooterMartello1930() {
   return (
-    <footer className="bg-wood-900 text-wood-100 py-12 mt-auto">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Colonna 1: Info azienda */}
-          <div>
-            <h3 className="text-xl font-bold mb-4 text-wood-50">MARTELLO 1930</h3>
-            <p className="text-sm mb-4 text-wood-300">
-              Da oltre 90 anni realizziamo strutture in legno di qualità superiore.
-              Pergole bioclimatiche, carport e coperture artigianali su misura.
+    <footer className="bg-gradient-to-br from-green-700 to-green-900 text-white mt-auto">
+      {/* Header con Logo */}
+      <div className="border-b border-white/20">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex justify-center">
+            <Image
+              src="https://www.genspark.ai/api/files/s/ugGYNhgQ"
+              alt="Martello 1930"
+              width={200}
+              height={120}
+              className="h-24 w-auto"
+              priority
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Contenuto Footer */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Colonna 1: Chi Siamo */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-white">Chi Siamo</h3>
+            <p className="text-sm text-white/90 leading-relaxed">
+              Dal 1930 realizziamo strutture in legno di qualità superiore. Pergole, carport, 
+              pensiline e soluzioni artigianali su misura per valorizzare i tuoi spazi esterni.
             </p>
-            <div className="flex space-x-4">
-              <Link href="https://www.facebook.com/martello1930" target="_blank" rel="noopener noreferrer" className="hover:text-wood-400 transition-colors">
-                <Facebook size={20} />
-              </Link>
-              <Link href="https://www.instagram.com/martello1930" target="_blank" rel="noopener noreferrer" className="hover:text-wood-400 transition-colors">
-                <Instagram size={20} />
-              </Link>
-              <Link href="https://www.linkedin.com/company/martello1930" target="_blank" rel="noopener noreferrer" className="hover:text-wood-400 transition-colors">
-                <Linkedin size={20} />
-              </Link>
+          </div>
+
+          {/* Colonna 2: Contatti */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-white">Contatti</h3>
+            <div className="space-y-3 text-sm">
+              <a
+                href="tel:+390185167656"
+                className="flex items-center gap-2 text-white/90 hover:text-white transition-colors group"
+              >
+                <Phone className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                <span>+39 0185 167 65 66</span>
+              </a>
+              <a
+                href="https://wa.me/390185167656"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-white/90 hover:text-white transition-colors group"
+              >
+                <MessageCircle className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                <span>WhatsApp</span>
+              </a>
+              <a
+                href="mailto:soluzioni@martello1930.net"
+                className="flex items-center gap-2 text-white/90 hover:text-white transition-colors group"
+              >
+                <Mail className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                <span>soluzioni@martello1930.net</span>
+              </a>
             </div>
           </div>
 
-          {/* Colonna 2: Link utili */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-wood-50">Link Utili</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/progetti" className="hover:text-wood-400 transition-colors">
-                  I Nostri Progetti
-                </Link>
-              </li>
-              <li>
-                <Link href="/configurator" className="hover:text-wood-400 transition-colors">
-                  Configuratore Online
-                </Link>
-              </li>
-              <li>
-                <Link href="/prenota-appuntamento" className="hover:text-wood-400 transition-colors">
-                  Prenota Appuntamento
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy-policy" className="hover:text-wood-400 transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-            </ul>
+          {/* Colonna 3: Sede */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-white">Dove Siamo</h3>
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=Via+Aurelia+Sestri+Levante+GE"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-start gap-2 text-white/90 hover:text-white transition-colors group"
+            >
+              <MapPin className="h-4 w-4 mt-1 flex-shrink-0 group-hover:scale-110 transition-transform" />
+              <span className="text-sm">
+                Via Aurelia<br />
+                Sestri Levante (GE)<br />
+                Italia
+              </span>
+            </a>
           </div>
 
-          {/* Colonna 3: Contatti */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-wood-50">Contatti</h3>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start">
-                <MapPin size={18} className="mr-2 mt-1 flex-shrink-0 text-wood-400" />
-                <span>Via Martello, 123<br />12345 Città (Provincia)</span>
-              </li>
-              <li className="flex items-center">
-                <Phone size={18} className="mr-2 flex-shrink-0 text-wood-400" />
-                <a href="tel:+390123456789" className="hover:text-wood-400 transition-colors">
-                  +39 012 345 6789
-                </a>
-              </li>
-              <li className="flex items-center">
-                <Mail size={18} className="mr-2 flex-shrink-0 text-wood-400" />
-                <a href="mailto:info@martello1930.net" className="hover:text-wood-400 transition-colors">
-                  info@martello1930.net
-                </a>
-              </li>
-            </ul>
+          {/* Colonna 4: Link Utili */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-white">Link Utili</h3>
+            <div className="space-y-3 text-sm">
+              <a
+                href="https://www.martello1930.net"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-white/90 hover:text-white transition-colors group"
+              >
+                <Globe className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                <span>www.martello1930.net</span>
+              </a>
+              <Link
+                href="/configurator/type"
+                className="block text-white/90 hover:text-white transition-colors"
+              >
+                Configuratore Pergole
+              </Link>
+              <Link
+                href="/"
+                className="block text-white/90 hover:text-white transition-colors"
+              >
+                Torna alla Home
+              </Link>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Copyright */}
-        <div className="border-t border-wood-800 mt-8 pt-6 text-center text-sm text-wood-400">
-          <p>&copy; {new Date().getFullYear()} MARTELLO 1930. Tutti i diritti riservati.</p>
-          <p className="mt-2">P.IVA: IT01234567890 | Codice SDI: ABCDEFG</p>
+      {/* Copyright */}
+      <div className="border-t border-white/20">
+        <div className="container mx-auto px-4 py-6">
+          <div className="text-center text-sm text-white/80">
+            <p>© {new Date().getFullYear()} Martello 1930. Tutti i diritti riservati.</p>
+            <p className="mt-1">Strutture in legno dal 1930 • Qualità artigianale italiana</p>
+          </div>
         </div>
       </div>
     </footer>

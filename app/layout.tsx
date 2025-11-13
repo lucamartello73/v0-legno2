@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import "./globals.css"
 import Script from "next/script"
+import FooterMartello1930 from "@/components/layout/footer-martello1930"
 
 export const metadata: Metadata = {
   title: "LEGNO - Configuratore Pergole MARTELLO 1930",
@@ -38,8 +39,11 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className="font-sans">
-        <Suspense fallback={null}>{children}</Suspense>
+      <body className="font-sans flex flex-col min-h-screen">
+        <main className="flex-grow">
+          <Suspense fallback={null}>{children}</Suspense>
+        </main>
+        <FooterMartello1930 />
         <Analytics />
       </body>
     </html>

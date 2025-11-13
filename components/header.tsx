@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import Image from "next/image"
+// import Image from "next/image" - Usando img standard per compatibilità
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 
@@ -26,13 +26,10 @@ export function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
-            <Image
+            <img
               src="https://www.genspark.ai/api/files/s/bzknGl24"
               alt="Martello 1930"
-              width={80}
-              height={60}
               className="h-12 w-auto"
-              priority
             />
             <div className="flex flex-col">
               <span className="text-xl font-bold text-[#1A1A1A]">MARTELLO 1930</span>

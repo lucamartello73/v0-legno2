@@ -29,7 +29,7 @@ export function Header() {
             <img
               src="https://www.genspark.ai/api/files/s/bzknGl24"
               alt="Martello 1930"
-              className="h-12 w-auto"
+              className="h-16 w-auto md:h-20"
             />
             <div className="flex flex-col">
               <span className="text-xl font-bold text-[#1A1A1A]">MARTELLO 1930</span>

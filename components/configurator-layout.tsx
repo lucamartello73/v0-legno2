@@ -44,7 +44,7 @@ export function ConfiguratorLayout({ children, currentStep, nextHref, prevHref }
   }, [currentStep])
 
   return (
-    <div className="min-h-screen martello-gradient">
+    <div className="min-h-screen bg-[#F5F1E8]">
       <Header />
       <WhatsAppButton />
 

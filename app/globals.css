@@ -1,220 +1,550 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@custom-variant dark (&:is(.dark *));
+/* ============================================
+   MARTELLO 1930 - DESIGN SYSTEM GLOBALS
+   ============================================ */
+
+/* Reset e Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 :root {
-  /* LEGNO Pergola Configurator - MARTELLO 1930 Brand Colors - EXACT MATCH */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(0.87 0.02 240); /* Sky-400 exact match for glassmorphism cards */
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-
-  /* Updated to exact orange-600 values from reference */
-  --primary: oklch(0.705 0.218 35.96); /* Orange-600 exact match */
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.87 0.02 240); /* Sky-400 exact match */
-  --secondary-foreground: oklch(0.145 0 0);
-
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.45 0 0);
-
-  /* Updated to exact amber-500/600 values from reference */
-  --accent: oklch(0.847 0.183 83.87); /* Amber-500 exact match for selections */
-  --accent-foreground: oklch(0.145 0 0);
-
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.847 0.183 83.87); /* Amber ring for focus states */
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-
-  /* Updated MARTELLO 1930 brand color variables to exact reference values */
-  --martello-emerald-start: oklch(0.646 0.222 41.116); /* Emerald-700 exact */
-  --martello-emerald-end: oklch(0.488 0.243 264.376); /* Green-800 exact */
-  --martello-sky-cards: oklch(0.87 0.02 240); /* Sky-400 exact for glassmorphism */
-  --martello-orange-primary: oklch(0.705 0.218 35.96); /* Orange-600 exact */
-  --martello-orange-hover: oklch(0.647 0.218 35.96); /* Orange-700 exact */
-  --martello-amber-active: oklch(0.847 0.183 83.87); /* Amber-500 exact */
-  --martello-amber-hover: oklch(0.795 0.183 83.87); /* Amber-600 exact */
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* ========== COLORI ========== */
+  
+  /* Background */
+  --bg-page: #F5F1E8;                    /* Sfondo pagina - beige/crema chiaro */
+  --bg-card: #FFFFFF;                    /* Sfondo card - bianco puro */
+  --bg-header: rgba(255, 255, 255, 0.8); /* Header semi-trasparente */
+  
+  /* Bordi */
+  --border-card: #E91E63;                /* Rosa/Magenta - caratteristico */
+  --border-light: #E0E0E0;               /* Grigio chiaro */
+  --border-medium: #D7CCC8;              /* Beige/Grigio */
+  
+  /* Pulsanti Primari */
+  --btn-primary-bg: #3E2723;             /* Marrone molto scuro */
+  --btn-primary-text: #FFFFFF;           /* Bianco */
+  --btn-primary-hover: #2C1810;          /* Marrone ancora più scuro */
+  
+  /* Pulsanti Secondari */
+  --btn-secondary-bg: transparent;
+  --btn-secondary-text: #3E2723;
+  --btn-secondary-border: #D7CCC8;
+  --btn-secondary-hover: rgba(62, 39, 35, 0.05);
+  
+  /* Testo */
+  --text-primary: #1A1A1A;               /* Quasi nero - titoli */
+  --text-secondary: #666666;             /* Grigio medio - descrizioni */
+  --text-tertiary: #999999;              /* Grigio chiaro - info */
+  --text-price: #000000;                 /* Nero puro - prezzi */
+  
+  /* Progress Bar */
+  --progress-bg: #E0E0E0;                /* Grigio chiaro */
+  --progress-fill: #3E2723;              /* Marrone scuro */
+  
+  /* Badge */
+  --badge-size-bg: #F5E6D3;              /* Beige chiaro */
+  --badge-size-text: #5D4037;            /* Marrone scuro */
+  --badge-number-bg: #E91E63;            /* Rosa/Magenta */
+  --badge-number-text: #FFFFFF;          /* Bianco */
+  
+  /* Accenti */
+  --accent-primary: #E91E63;             /* Rosa/Magenta */
+  --accent-secondary: #00BCD4;           /* Turchese */
+  --accent-success: #4CAF50;             /* Verde */
+  
+  /* Ombre */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-button: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-header: 0 2px 4px rgba(0, 0, 0, 0.05);
+  
+  /* ========== SPAZIATURE ========== */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.269 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.705 0.218 35.96); /* Keep orange consistent in dark mode */
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.75 0 0);
-  --accent: oklch(0.847 0.183 83.87); /* Keep amber consistent in dark mode */
-  --accent-foreground: oklch(0.145 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+/* ========== BASE STYLES ========== */
+
+body {
+  font-family: var(--font-geist-sans), 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+/* ========== TIPOGRAFIA ========== */
+
+h1, .heading-1 {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin-bottom: 12px;
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+h2, .heading-2 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin-bottom: 16px;
 }
 
-/* Updated LEGNO custom styles to match exact reference specifications */
-.martello-gradient {
-  background: linear-gradient(135deg, #047857 0%, #166534 100%); /* Exact emerald-to-green gradient */
+h3, .heading-3 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin-bottom: 8px;
 }
 
-.glass-card {
-  background: rgba(56, 189, 248, 0.4); /* Sky-400 with 40% opacity for glassmorphism */
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+p, .body-text {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-secondary);
 }
 
-.glass-nav {
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+.small-text, small {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--text-tertiary);
 }
 
-.btn-primary {
-  background: #ea580c; /* Orange-600 exact */
-  color: white;
+/* Responsive Typography */
+@media (max-width: 639px) {
+  h1, .heading-1 { font-size: 28px; }
+  h2, .heading-2 { font-size: 20px; }
+  h3, .heading-3 { font-size: 18px; }
 }
 
-.btn-primary:hover {
-  background: #c2410c; /* Orange-700 exact */
+/* ========== HEADER ========== */
+
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 65px;
+  background: var(--bg-header);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-header);
+  z-index: 1000;
 }
 
-.btn-active {
-  background: #f59e0b; /* Amber-500 exact */
-  color: white;
+.header-container {
+  max-width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.btn-active:hover {
-  background: #d97706; /* Amber-600 exact */
+.header-logo {
+  width: 80px;
+  height: auto;
 }
 
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #1f2937; /* Gray-800 */
+.header-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
 }
 
-.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.2);
+.header-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
-.hover-lift:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+.btn-header {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  background: #FFFFFF;
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.progress-complete {
-  background: #f59e0b; /* Amber-500 exact */
+.btn-header:hover {
+  background: #F5F5F5;
+  border-color: #BDBDBD;
 }
 
-.progress-incomplete {
-  background: rgba(255, 255, 255, 0.3);
+@media (max-width: 639px) {
+  .header-container {
+    padding: 0 16px;
+  }
+  
+  .header-title {
+    display: none;
+  }
+  
+  .header-logo {
+    width: 60px;
+  }
 }
 
-.selection-ring {
-  box-shadow: 0 0 0 2px #f59e0b; /* Amber-500 ring exact */
+/* ========== PROGRESS BAR ========== */
+
+.progress-section {
+  max-width: 976px;
+  margin: 24px auto;
+  padding: 0 24px;
 }
 
-.status-approved {
-  background: #16a34a; /* Green-600 exact */
-  color: white;
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
 }
 
-.status-pending {
-  background: #d97706; /* Amber-600 exact */
-  color: white;
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--progress-bg);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
-.status-error {
-  background: rgba(239, 68, 68, 0.2); /* Red-500/20 */
-  border: 1px solid rgba(252, 165, 165, 0.3); /* Red-300/30 */
-  color: #b91c1c; /* Red-700 */
+.progress-fill {
+  height: 100%;
+  background: var(--progress-fill);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* ========== MAIN CONTENT ========== */
+
+.main-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  margin-top: 100px;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.section-description {
+  max-width: 600px;
+  margin: 0 auto;
+  color: var(--text-secondary);
+}
+
+/* ========== GRID PRODOTTI ========== */
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+@media (max-width: 1023px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 639px) {
+  .main-content {
+    padding: 0 16px;
+    margin-top: 80px;
+  }
+  
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* ========== CARD PRODOTTO ========== */
+
+.product-card {
+  background: var(--bg-card);
+  border: 2px dashed var(--border-card);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.product-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+/* Badge Numerico */
+.badge-number {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 28px;
+  height: 28px;
+  background: var(--badge-number-bg);
+  color: var(--badge-number-text);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Badge Dimensioni */
+.badge-size {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--badge-size-bg);
+  color: var(--badge-size-text);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.product-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.product-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-specs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.spec-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.spec-value {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 12px;
+  border-top: 1px solid #F0F0F0;
+}
+
+.product-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.price-prefix {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.price {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-price);
+}
+
+.product-size {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+@media (max-width: 639px) {
+  .product-card {
+    padding: 12px;
+  }
+  
+  .price {
+    font-size: 20px;
+  }
+}
+
+/* ========== PULSANTI ========== */
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 32px;
+  padding: 24px 0;
+}
+
+.btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  box-shadow: var(--shadow-button);
+}
+
+.btn-primary:hover {
+  background: var(--btn-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--btn-secondary-border);
+  font-weight: 500;
+}
+
+.btn-secondary:hover {
+  background: var(--btn-secondary-hover);
+  border-color: var(--btn-primary-bg);
+}
+
+@media (max-width: 639px) {
+  .navigation-buttons {
+    flex-direction: column-reverse;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
+
+/* ========== ANIMAZIONI ========== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Riduzione animazioni per accessibilità */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========== UTILITY CLASSES ========== */
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 639px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+/* ========== DARK MODE (opzionale) ========== */
+
+@media (prefers-color-scheme: dark) {
+  /* Lasciare vuoto per ora, implementare se necessario */
 }

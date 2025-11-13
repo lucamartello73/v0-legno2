@@ -1,6 +1,6 @@
 "use client"
 
-import Image from "next/image"
+// import Image from "next/image" - Usando img standard
 import Link from "next/link"
 import { MapPin, Phone, Mail, Globe, MessageCircle } from "lucide-react"
 
@@ -11,13 +11,10 @@ export default function FooterMartello1930() {
       <div className="border-b border-white/20">
         <div className="container mx-auto px-4 py-8">
           <div className="flex justify-center">
-            <Image
-              src="https://www.genspark.ai/api/files/s/ugGYNhgQ"
+            <img
+              src="/logo-martello-1930.png"
               alt="Martello 1930"
-              width={200}
-              height={120}
-              className="h-24 w-auto"
-              priority
+              className="h-28 w-auto md:h-32"
             />
           </div>
         </div>

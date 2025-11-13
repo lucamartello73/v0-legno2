@@ -76,9 +76,9 @@ export function ConfiguratorLayout({ children, currentStep, nextHref, prevHref }
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mb-2 ${
                       step.number === currentStep
-                        ? "bg-amber-500 text-white"
+                        ? "bg-[#E91E63] text-white"
                         : step.number < currentStep
-                          ? "bg-amber-500 text-white"
+                          ? "bg-[#E91E63] text-white"
                           : "bg-black/40 text-white border border-white/30"
                     }`}
                   >
@@ -91,7 +91,7 @@ export function ConfiguratorLayout({ children, currentStep, nextHref, prevHref }
           </div>
 
           {/* Main Content */}
-          <div className="bg-sky-400 backdrop-blur-sm border-white/20 rounded-lg shadow-lg p-6 md:p-8 mb-8">
+          <div className="bg-white/95 backdrop-blur-sm border-white/20 rounded-lg shadow-lg p-6 md:p-8 mb-8">
             {children}
           </div>
 
@@ -115,7 +115,7 @@ export function ConfiguratorLayout({ children, currentStep, nextHref, prevHref }
               {nextHref && (
                 <Button
                   asChild
-                  className="bg-orange-600 hover:bg-orange-700 text-white"
+                  className="bg-[#3E2723] hover:bg-[#2C1810] text-white"
                   disabled={!isStepValid(currentStep)}
                 >
                   <Link href={nextHref}>

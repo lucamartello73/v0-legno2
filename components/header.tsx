@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 
@@ -19,37 +20,43 @@ export function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        isScrolled ? "bg-white/95 backdrop-blur-md shadow-sm" : "bg-black/40 backdrop-blur-sm"
-      }`}
+      className="fixed top-0 left-0 right-0 z-40 transition-all duration-300 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-200"
     >
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex flex-col">
-            <span className={`text-2xl font-bold ${isScrolled ? "text-foreground" : "text-white"}`}>MARTELLO 1930</span>
-            <span className={`text-sm ${isScrolled ? "text-muted-foreground" : "text-white/80"}`}>
-              Configuratore Pergole
-            </span>
+          <Link href="/" className="flex items-center gap-3">
+            <Image
+              src="https://www.genspark.ai/api/files/s/bzknGl24"
+              alt="Martello 1930"
+              width={80}
+              height={60}
+              className="h-12 w-auto"
+              priority
+            />
+            <div className="flex flex-col">
+              <span className="text-xl font-bold text-[#1A1A1A]">MARTELLO 1930</span>
+              <span className="text-xs text-[#666666]">Configuratore Pergole</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               href="/"
-              className={`hover:text-primary transition-colors ${isScrolled ? "text-foreground" : "text-white"}`}
+              className="text-[#666666] hover:text-[#3E2723] transition-colors font-medium"
             >
               Home
             </Link>
             <Link
               href="/configurator/type"
-              className={`hover:text-primary transition-colors ${isScrolled ? "text-foreground" : "text-white"}`}
+              className="text-[#666666] hover:text-[#3E2723] transition-colors font-medium"
             >
               Configuratore
             </Link>
             <Link
               href="/admin"
-              className={`hover:text-primary transition-colors ${isScrolled ? "text-foreground" : "text-white"}`}
+              className="text-[#666666] hover:text-[#3E2723] transition-colors font-medium"
             >
               Admin
             </Link>
@@ -57,7 +64,7 @@ export function Header() {
 
           {/* CTA Button */}
           <div className="hidden md:block">
-            <Button asChild className="emerald-gradient text-white hover:opacity-90">
+            <Button asChild className="bg-[#3E2723] hover:bg-[#2C1810] text-white">
               <Link href="/configurator/type">Inizia Configurazione</Link>
             </Button>
           </div>
@@ -70,39 +77,39 @@ export function Header() {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
-              <X className={`h-6 w-6 ${isScrolled ? "text-foreground" : "text-white"}`} />
+              <X className="h-6 w-6 text-[#1A1A1A]" />
             ) : (
-              <Menu className={`h-6 w-6 ${isScrolled ? "text-foreground" : "text-white"}`} />
+              <Menu className="h-6 w-6 text-[#1A1A1A]" />
             )}
           </Button>
         </div>
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <nav className="md:hidden mt-4 pb-4 border-t border-border">
+          <nav className="md:hidden mt-4 pb-4 border-t border-gray-200">
             <div className="flex flex-col space-y-4 pt-4">
               <Link
                 href="/"
-                className={`hover:text-primary transition-colors ${isScrolled ? "text-foreground" : "text-white"}`}
+                className="text-[#666666] hover:text-[#3E2723] transition-colors font-medium"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 href="/configurator/type"
-                className={`hover:text-primary transition-colors ${isScrolled ? "text-foreground" : "text-white"}`}
+                className="text-[#666666] hover:text-[#3E2723] transition-colors font-medium"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Configuratore
               </Link>
               <Link
                 href="/admin"
-                className={`hover:text-primary transition-colors ${isScrolled ? "text-foreground" : "text-white"}`}
+                className="text-[#666666] hover:text-[#3E2723] transition-colors font-medium"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Admin
               </Link>
-              <Button asChild className="emerald-gradient text-white w-full">
+              <Button asChild className="bg-[#3E2723] hover:bg-[#2C1810] text-white w-full">
                 <Link href="/configurator/type" onClick={() => setIsMobileMenuOpen(false)}>
                   Inizia Configurazione
                 </Link>

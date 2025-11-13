@@ -141,7 +141,7 @@
 
 /* MARTELLO 1930 custom styles - Colori aggiornati al design system */
 .martello-gradient {
-  background: linear-gradient(135deg, #047857 0%, #166534 100%);
+  background: #F5F1E8; /* Sfondo beige/crema */
 }
 
 .glass-card {

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { ConfiguratorLayout } from "@/components/configurator-layout"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +13,7 @@ export default function TypePage() {
   const [pergolaTypes, setPergolaTypes] = useState<PergolaType[]>([])
   const [loading, setLoading] = useState(true)
   const { type_name, setType } = useConfigurationStore()
+  const router = useRouter()
 
   useEffect(() => {
     async function fetchPergolaTypes() {
@@ -36,6 +38,11 @@ export default function TypePage() {
 
   const handleTypeSelect = (type: PergolaType) => {
     setType(type.id, type.name)
+    
+    // AUTO-NAVIGAZIONE: Passa automaticamente allo step successivo dopo breve delay
+    setTimeout(() => {
+      router.push("/configurator/dimensions")
+    }, 300) // 300ms di delay per feedback visivo
   }
 
   if (loading) {
@@ -90,7 +97,7 @@ export default function TypePage() {
 
         {!type_name && (
           <div className="text-center text-foreground/70">
-            <p>Seleziona un tipo di pergola per continuare</p>
+            <p>Clicca su una carta per selezionare e procedere automaticamente</p>
           </div>
         )}
       </div>

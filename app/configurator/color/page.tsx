@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { ConfiguratorLayout } from "@/components/configurator-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -14,18 +15,29 @@ export default function ColorPage() {
   const { color_category, color_name, setColor, isStepValid, color_value } = useConfigurationStore()
   const [customColors, setCustomColors] = useState<Record<string, string>>({})
   const [showCustomInput, setShowCustomInput] = useState<Record<string, boolean>>({})
+  const router = useRouter()
 
   const handleColorSelect = (category: ColorCategory, colorName: string, colorValue: string) => {
     setColor(category, colorName, colorValue)
     // Reset custom color inputs when selecting predefined colors
     setCustomColors((prev) => ({ ...prev, [category]: "" }))
     setShowCustomInput((prev) => ({ ...prev, [category]: false }))
+    
+    // AUTO-NAVIGAZIONE: Passa automaticamente allo step successivo dopo breve delay
+    setTimeout(() => {
+      router.push("/configurator/coverage")
+    }, 400) // 400ms di delay per feedback visivo
   }
 
   const handleCustomColorSelect = (category: ColorCategory) => {
     const customColorValue = customColors[category]
     if (customColorValue?.trim()) {
       setColor(category, "Colore Personalizzato", customColorValue)
+      
+      // AUTO-NAVIGAZIONE anche per colori custom
+      setTimeout(() => {
+        router.push("/configurator/coverage")
+      }, 400)
     }
   }
 
@@ -42,7 +54,7 @@ export default function ColorPage() {
       <div className="space-y-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4">Scegli il Colore</h2>
-          <p className="text-muted-foreground text-lg">Seleziona la categoria e il colore per la tua pergola</p>
+          <p className="text-muted-foreground text-lg">Clicca sul colore per selezionare e continuare automaticamente</p>
         </div>
 
         <div className="space-y-8">
@@ -114,6 +126,11 @@ export default function ColorPage() {
                         value={customColors[category] || ""}
                         onChange={(e) => setCustomColors((prev) => ({ ...prev, [category]: e.target.value }))}
                         className="flex-1"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && customColors[category]?.trim()) {
+                            handleCustomColorSelect(category as ColorCategory)
+                          }
+                        }}
                       />
                       <Button
                         onClick={() => handleCustomColorSelect(category as ColorCategory)}
@@ -130,7 +147,7 @@ export default function ColorPage() {
           ))}
         </div>
 
-        {/* Selection Summary */}
+        {/* Selection Summary - RIMOSSA LA AUTO-NAVIGAZIONE DAL PULSANTE */}
         {color_category && color_name && (
           <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary border-2 shadow-lg">
             <CardContent className="pt-6 pb-6">
@@ -145,18 +162,9 @@ export default function ColorPage() {
                   </span>
                 </div>
                 <div className="pt-2">
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Perfetto! Hai scelto il colore per la tua pergola.
+                  <p className="text-sm text-muted-foreground">
+                    ✓ Colore selezionato! Usa il pulsante "Continua" in basso per procedere quando sei pronto.
                   </p>
-                  <div className="flex justify-center">
-                    <Button
-                      size="lg"
-                      className="px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 bg-primary hover:bg-primary/90"
-                      onClick={() => (window.location.href = "/configurator/coverage")}
-                    >
-                      Continua con la Copertura →
-                    </Button>
-                  </div>
                 </div>
               </div>
             </CardContent>

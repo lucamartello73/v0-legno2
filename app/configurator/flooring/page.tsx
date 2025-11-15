@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { ConfiguratorLayout } from "@/components/configurator-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -14,6 +15,7 @@ export default function FlooringPage() {
   const [flooringTypes, setFlooringTypes] = useState<FlooringType[]>([])
   const [loading, setLoading] = useState(true)
   const { flooring_names, setFlooring } = useConfigurationStore()
+  const router = useRouter()
 
   useEffect(() => {
     async function fetchFlooringTypes() {
@@ -41,6 +43,11 @@ export default function FlooringPage() {
     } else {
       // Replace any previous selection with the new one
       newNames = [flooring.name]
+      
+      // AUTO-NAVIGAZIONE: Passa automaticamente allo step successivo dopo selezione
+      setTimeout(() => {
+        router.push("/configurator/accessories")
+      }, 400)
     }
 
     setFlooring(newNames, newNames)
@@ -64,7 +71,7 @@ export default function FlooringPage() {
       <div className="space-y-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4">Pavimentazione</h2>
-          <p className="text-muted-foreground text-lg">Seleziona il tipo di pavimentazione desiderato (opzionale)</p>
+          <p className="text-muted-foreground text-lg">Clicca per selezionare (opzionale) e continuare automaticamente</p>
         </div>
 
         {hasImages ? (
@@ -151,7 +158,7 @@ export default function FlooringPage() {
 
         {flooring_names.length === 0 && (
           <div className="text-center text-muted-foreground">
-            <p>Nessuna pavimentazione selezionata (opzionale)</p>
+            <p>Nessuna pavimentazione selezionata (opzionale) - usa il pulsante "Continua" per procedere</p>
           </div>
         )}
       </div>

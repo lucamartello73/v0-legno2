@@ -8,6 +8,12 @@ import { Badge } from "@/components/ui/badge"
 import { useConfigurationStore } from "@/lib/store"
 import { createClient } from "@/lib/supabase/client"
 import type { PergolaType } from "@/lib/types"
+import { 
+  trackConfiguratorStart, 
+  trackPergolaTypeSelected,
+  startStepTimer,
+  trackStepDuration
+} from "@/lib/vercel-analytics-tracking"
 
 export default function TypePage() {
   const [pergolaTypes, setPergolaTypes] = useState<PergolaType[]>([])
@@ -37,6 +43,10 @@ export default function TypePage() {
   }, [])
 
   const handleTypeSelect = (type: PergolaType) => {
+    // Track type selection
+    trackPergolaTypeSelected(type.name)
+    trackStepDuration(1, 'tipo_pergola')
+    
     setType(type.id, type.name)
     
     // AUTO-NAVIGAZIONE: Passa automaticamente allo step successivo dopo breve delay

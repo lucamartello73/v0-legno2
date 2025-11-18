@@ -187,7 +187,7 @@ export async function POST(request: NextRequest) {
     const customerConfirmationContent = `
       Gentile ${body.contact_data?.nome},
       
-      La ringraziamo per aver utilizzato il nostro CONFIGURATORE PERGOLE.
+      La ringraziamo per aver utilizzato il nostro CONFIGURATORE PERGOLE LEGNO.
       ${codicePreventivo ? `\n      CODICE PREVENTIVO: ${codicePreventivo}\n` : ""}
       
       RIEPILOGO CONFIGURAZIONE:
@@ -208,7 +208,7 @@ export async function POST(request: NextRequest) {
     `
 
     const adminNotificationContent = `
-      🏛️ CONFIGURATORE PERGOLE - Nuova richiesta di preventivo ricevuta:
+      🏛️ CONFIGURATORE PERGOLE LEGNO - Nuova richiesta di preventivo ricevuta:
       ${codicePreventivo ? `\n      📋 CODICE PREVENTIVO: ${codicePreventivo}\n` : ""}
       
       Cliente: ${body.contact_data?.nome} ${body.contact_data?.cognome}
@@ -241,7 +241,7 @@ export async function POST(request: NextRequest) {
 
       const customerEmailResult = await sendEmailWithGmail(
         body.contact_data.email,
-        "CONFIGURATORE PERGOLE - Conferma Richiesta Preventivo - MARTELLO 1930",
+        "CONFIGURATORE PERGOLE LEGNO - Conferma Richiesta Preventivo - MARTELLO 1930",
         customerConfirmationContent,
       )
 
@@ -252,7 +252,7 @@ export async function POST(request: NextRequest) {
         console.log("⚠️ [Gmail] Customer email failed, activating internal confirmation system")
         const confirmationResult = await logCustomerConfirmation(
           body.contact_data.email,
-          "CONFIGURATORE PERGOLE - Conferma Richiesta Preventivo - MARTELLO 1930",
+          "CONFIGURATORE PERGOLE LEGNO - Conferma Richiesta Preventivo - MARTELLO 1930",
           customerConfirmationContent,
           `${body.contact_data?.nome} ${body.contact_data?.cognome}`.trim() || "Cliente",
         )
@@ -268,7 +268,7 @@ export async function POST(request: NextRequest) {
 
     const adminEmailResult = await sendEmailWithGmail(
       adminEmail,
-      `CONFIGURATORE PERGOLE - Nuova Richiesta Preventivo - ${body.contact_data?.nome} ${body.contact_data?.cognome}`,
+      `CONFIGURATORE PERGOLE LEGNO - Nuova Richiesta Preventivo - ${body.contact_data?.nome} ${body.contact_data?.cognome}`,
       adminNotificationContent,
     )
 
@@ -297,7 +297,7 @@ export async function POST(request: NextRequest) {
     const { error: notificationError } = await supabase.from("configuratorelegno_notifications").insert({
       type: "new_quote",
       category: "quote_request",
-      title: `CONFIGURATORE PERGOLE - Nuova Richiesta Preventivo - ${body.contact_data?.nome} ${body.contact_data?.cognome}`,
+      title: `CONFIGURATORE PERGOLE LEGNO - Nuova Richiesta Preventivo - ${body.contact_data?.nome} ${body.contact_data?.cognome}`,
       message: adminNotificationContent,
       configuration_id: data[0]?.id,
       recipient_type: "admin",

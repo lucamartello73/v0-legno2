@@ -1,7 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ConfiguratorLayout } from "@/components/configurator-layout"
+import { completeConfigurationTracking, updateConfigurationTracking } from "@/lib/configuration-tracking"
+import { VercelAnalytics } from "@/lib/vercel-analytics-integration"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -15,6 +17,16 @@ export default function SummaryPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const configuration = useConfigurationStore()
+  
+  useEffect(() => {
+    // Track step start
+    VercelAnalytics.trackStepReached(8, 'riepilogo')
+    
+    // Track reaching summary (step 8)
+    updateConfigurationTracking({
+      step_reached: 8,
+    })
+  }, [])
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("it-IT", {
@@ -60,6 +72,35 @@ export default function SummaryPage() {
           },
           body: JSON.stringify(configuration),
         })
+        
+        // ✅ COMPLETA TRACKING (IL PIÙ IMPORTANTE!)
+        await completeConfigurationTracking(
+          {
+            cliente_nome: `${configuration.contact_data?.nome} ${configuration.contact_data?.cognome}`,
+            cliente_email: configuration.contact_data?.email,
+            cliente_telefono: configuration.contact_data?.telefono,
+            cliente_citta: configuration.contact_data?.citta,
+            cliente_note: configuration.contact_data?.note,
+          },
+          {
+            // Aggiorna dati finali (se non già tracciati)
+            tipo_pergola_nome: configuration.type_name,
+            dimensioni_larghezza: configuration.width,
+            dimensioni_profondita: configuration.depth,
+            dimensioni_altezza: configuration.height,
+            colore_struttura_nome: configuration.color_category === 'struttura' ? configuration.color_name : undefined,
+            copertura_nome: configuration.coverage_name,
+            pavimentazione_nomi: configuration.flooring_names,
+            accessori_nomi: configuration.accessory_names,
+            // prezzo_configurazione: calculateTotalPrice(configuration), // Se hai logica prezzo
+          }
+        )
+        
+        // Track su Vercel Analytics
+        VercelAnalytics.trackConfiguratorCompleted(
+          0, // Prezzo finale (se disponibile)
+          configuration
+        )
 
         setIsSubmitted(true)
       } else {

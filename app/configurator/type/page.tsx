@@ -14,6 +14,11 @@ import {
   startStepTimer,
   trackStepDuration
 } from "@/lib/vercel-analytics-tracking"
+import {
+  startConfigurationTracking,
+  updateConfigurationTracking,
+} from "@/lib/configuration-tracking"
+import { VercelAnalytics } from "@/lib/vercel-analytics-integration"
 
 export default function TypePage() {
   const [pergolaTypes, setPergolaTypes] = useState<PergolaType[]>([])
@@ -39,13 +44,27 @@ export default function TypePage() {
       setLoading(false)
     }
 
+    // Inizializza tracking configurazione
+    startConfigurationTracking()
+    trackConfiguratorStart()
+    startStepTimer()
+    VercelAnalytics.trackConfiguratorStarted()
+
     fetchPergolaTypes()
   }, [])
 
   const handleTypeSelect = (type: PergolaType) => {
-    // Track type selection
+    // Track type selection (Vercel Analytics)
     trackPergolaTypeSelected(type.name)
     trackStepDuration(1, 'tipo_pergola')
+    VercelAnalytics.trackPergolaTypeSelected(type.name)
+    
+    // Track in nostro sistema (Supabase)
+    updateConfigurationTracking({
+      step_reached: 1,
+      tipo_pergola_id: type.id,
+      tipo_pergola_nome: type.name,
+    })
     
     setType(type.id, type.name)
     

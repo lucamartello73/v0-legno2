@@ -4,6 +4,7 @@ import type React from "react"
 
 import { Header } from "@/components/header"
 import { WhatsAppButton } from "@/components/whatsapp-button"
+import { TrackingAbandonmentHandler } from "@/components/tracking-abandonment"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { ChevronLeft, ChevronRight } from "lucide-react"
@@ -47,6 +48,7 @@ export function ConfiguratorLayout({ children, currentStep, nextHref, prevHref }
     <div className="min-h-screen bg-[#F5F1E8]">
       <Header />
       <WhatsAppButton />
+      <TrackingAbandonmentHandler />
 
       <div className="pt-24 pb-12">
         <div className="container mx-auto px-6 max-w-4xl">

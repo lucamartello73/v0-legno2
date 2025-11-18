@@ -6,6 +6,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useConfigurationStore } from "@/lib/store"
 import { useEffect, useState } from "react"
+import { trackDimensionsSelected, startStepTimer, trackStepDuration } from "@/lib/vercel-analytics-tracking"
+import { updateConfigurationTracking } from "@/lib/configuration-tracking"
+import { VercelAnalytics } from "@/lib/vercel-analytics-integration"
 
 interface HomepageSettings {
   dimensions_addossata_image: string
@@ -26,6 +29,10 @@ export default function DimensionsPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Track step start
+    startStepTimer()
+    VercelAnalytics.trackStepReached(2, 'dimensioni')
+
     const fetchHomepageSettings = async () => {
       try {
         console.log("[v0] Fetching homepage settings...")
@@ -58,6 +65,27 @@ export default function DimensionsPage() {
     const numValue = Number.parseInt(value) || 0
     const newDimensions = { width, depth, height, [dimension]: numValue }
     setDimensions(newDimensions.width, newDimensions.depth, newDimensions.height)
+    
+    // Track when all dimensions are valid
+    if (newDimensions.width >= 100 && newDimensions.depth >= 100 && newDimensions.height >= 200) {
+      trackDimensionsSelected({
+        width: newDimensions.width,
+        depth: newDimensions.depth,
+        height: newDimensions.height
+      })
+      trackStepDuration(2, 'dimensioni')
+      VercelAnalytics.trackDimensionsSelected(newDimensions)
+      
+      // Track in nostro sistema (Supabase)
+      const area = newDimensions.width * newDimensions.depth / 10000 // cm² to m²
+      updateConfigurationTracking({
+        step_reached: 2,
+        dimensioni_larghezza: newDimensions.width,
+        dimensioni_profondita: newDimensions.depth,
+        dimensioni_altezza: newDimensions.height,
+        dimensioni_area_mq: area,
+      })
+    }
   }
 
   const getImageForType = () => {

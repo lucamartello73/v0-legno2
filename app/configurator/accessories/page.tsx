@@ -9,6 +9,8 @@ import { useConfigurationStore } from "@/lib/store"
 import { createClient } from "@/lib/supabase/client"
 import type { Accessory } from "@/lib/types"
 import { Check } from "lucide-react"
+import { updateConfigurationTracking } from "@/lib/configuration-tracking"
+import { VercelAnalytics } from "@/lib/vercel-analytics-integration"
 
 export default function AccessoriesPage() {
   const [accessories, setAccessories] = useState<Accessory[]>([])
@@ -16,6 +18,9 @@ export default function AccessoriesPage() {
   const { accessory_names } = useConfigurationStore()
 
   useEffect(() => {
+    // Track step start
+    VercelAnalytics.trackStepReached(6, 'accessori')
+    
     async function fetchAccessories() {
       const supabase = createClient()
       const { data, error } = await supabase.from("configuratorelegno_accessories").select("*").order("created_at")
@@ -45,6 +50,24 @@ export default function AccessoriesPage() {
     }
 
     useConfigurationStore.getState().setAccessories(newIds, newNames)
+    
+    // Track accessories selection
+    const selectedAccessories = accessories.filter(a => newNames.includes(a.name))
+    const totalPrice = selectedAccessories.reduce((sum, a) => sum + (a.price || 0), 0)
+    
+    VercelAnalytics.trackAccessoriesSelected(
+      selectedAccessories.map(a => ({ name: a.name, price: a.price || 0 })),
+      totalPrice
+    )
+    
+    // Track in nostro sistema (Supabase)
+    updateConfigurationTracking({
+      step_reached: 6,
+      accessori_ids: newIds,
+      accessori_nomi: newNames,
+      accessori_count: newNames.length,
+      accessori_prezzo_totale: totalPrice,
+    })
   }
 
   if (loading) {

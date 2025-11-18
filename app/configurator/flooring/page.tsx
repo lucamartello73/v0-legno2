@@ -10,6 +10,8 @@ import { Check } from "lucide-react"
 import { useConfigurationStore } from "@/lib/store"
 import { createClient } from "@/lib/supabase/client"
 import type { FlooringType } from "@/lib/types"
+import { updateConfigurationTracking } from "@/lib/configuration-tracking"
+import { VercelAnalytics } from "@/lib/vercel-analytics-integration"
 
 export default function FlooringPage() {
   const [flooringTypes, setFlooringTypes] = useState<FlooringType[]>([])
@@ -18,6 +20,9 @@ export default function FlooringPage() {
   const router = useRouter()
 
   useEffect(() => {
+    // Track step start
+    VercelAnalytics.trackStepReached(5, 'pavimentazione')
+    
     async function fetchFlooringTypes() {
       const supabase = createClient()
       const { data, error } = await supabase.from("configuratorelegno_flooring_types").select("*").order("created_at")
@@ -43,6 +48,16 @@ export default function FlooringPage() {
     } else {
       // Replace any previous selection with the new one
       newNames = [flooring.name]
+      
+      // Track selection
+      VercelAnalytics.trackFlooringSelected(newNames)
+      
+      // Track in nostro sistema (Supabase)
+      updateConfigurationTracking({
+        step_reached: 5,
+        pavimentazione_nomi: newNames,
+        pavimentazione_count: newNames.length,
+      })
       
       // AUTO-NAVIGAZIONE: Passa automaticamente allo step successivo dopo selezione
       setTimeout(() => {

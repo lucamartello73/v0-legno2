@@ -8,6 +8,9 @@ import { Badge } from "@/components/ui/badge"
 import { useConfigurationStore } from "@/lib/store"
 import { createClient } from "@/lib/supabase/client"
 import type { CoverageType } from "@/lib/types"
+import { trackCoverageSelected, startStepTimer, trackStepDuration } from "@/lib/vercel-analytics-tracking"
+import { updateConfigurationTracking } from "@/lib/configuration-tracking"
+import { VercelAnalytics } from "@/lib/vercel-analytics-integration"
 
 export default function CoveragePage() {
   const [coverageTypes, setCoverageTypes] = useState<CoverageType[]>([])
@@ -16,6 +19,10 @@ export default function CoveragePage() {
   const router = useRouter()
 
   useEffect(() => {
+    // Track step start
+    startStepTimer()
+    VercelAnalytics.trackStepReached(4, 'copertura')
+
     async function fetchCoverageTypes() {
       const supabase = createClient()
       const { data, error } = await supabase.from("configuratorelegno_coverage_types").select("*").order("created_at")
@@ -32,6 +39,19 @@ export default function CoveragePage() {
   }, [])
 
   const handleCoverageSelect = (coverage: CoverageType) => {
+    // Track coverage selection
+    trackCoverageSelected(coverage.name, coverage.price || 0)
+    trackStepDuration(4, 'copertura')
+    VercelAnalytics.trackCoverageSelected(coverage.name, coverage.price)
+    
+    // Track in nostro sistema (Supabase)
+    updateConfigurationTracking({
+      step_reached: 4,
+      copertura_id: coverage.id,
+      copertura_nome: coverage.name,
+      copertura_prezzo: coverage.price || 0,
+    })
+    
     setCoverage(coverage.id, coverage.name)
     
     // AUTO-NAVIGAZIONE: Passa automaticamente allo step successivo dopo breve delay

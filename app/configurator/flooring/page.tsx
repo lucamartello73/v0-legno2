@@ -53,7 +53,15 @@ export default function FlooringPage() {
     setFlooring(newNames, newNames)
   }
 
-  const hasImages = flooringTypes.some((flooring) => flooring.image_url && flooring.image_url !== "/placeholder.svg")
+  // Migliora il rilevamento: mostra card se ALMENO UNA ha immagine valida
+  // Cambiato da some() per essere più permissivo
+  const hasImages = flooringTypes.length > 0 && flooringTypes.some((flooring) => {
+    const url = flooring.image_url
+    return url && 
+           url !== "/placeholder.svg" && 
+           url !== "" && 
+           url.trim().length > 0
+  })
 
   if (loading) {
     return (
@@ -89,11 +97,19 @@ export default function FlooringPage() {
                   onClick={() => handleFlooringToggle(flooring)}
                 >
                   <CardHeader>
-                    <div className="aspect-video rounded-lg overflow-hidden mb-4">
+                    <div className="aspect-video rounded-lg overflow-hidden mb-4 bg-muted">
                       <img
                         src={flooring.image_url || "/placeholder.svg"}
                         alt={flooring.name}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback se immagine esterna non carica
+                          const target = e.target as HTMLImageElement
+                          target.onerror = null // Previeni loop
+                          target.src = "/placeholder.svg"
+                          console.warn(`⚠️  Immagine non caricata per ${flooring.name}: ${flooring.image_url}`)
+                        }}
+                        loading="lazy"
                       />
                     </div>
                     <div className="flex items-center justify-between">

@@ -1,7 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ConfiguratorLayout } from "@/components/configurator-layout"
+import { updateConfigurationTracking } from "@/lib/configuration-tracking"
+import { VercelAnalytics } from "@/lib/vercel-analytics-integration"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -36,6 +38,11 @@ export default function ContactsPage() {
   )
 
   const [errors, setErrors] = useState<Partial<ContactData & { privacy_consent: string }>>({})
+  
+  useEffect(() => {
+    // Track step start
+    VercelAnalytics.trackStepReached(7, 'contatti')
+  }, [])
 
   const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   const validatePhone = (phone: string) => /^[+]?[\d\s-()]{8,}$/.test(phone)
@@ -44,6 +51,14 @@ export default function ContactsPage() {
     const newFormData = { ...formData, [field]: value }
     setFormData(newFormData)
     setContactData(newFormData)
+    
+    // Track contact data updates (partial)
+    if (field === 'nome' || field === 'email' || field === 'telefono' || field === 'citta') {
+      updateConfigurationTracking({
+        step_reached: 7,
+        [`cliente_${field}`]: value,
+      })
+    }
 
     if (errors[field]) {
       setErrors({ ...errors, [field]: undefined })

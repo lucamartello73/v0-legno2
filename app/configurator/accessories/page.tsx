@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { ConfiguratorLayout } from "@/components/configurator-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -16,6 +17,7 @@ export default function AccessoriesPage() {
   const [accessories, setAccessories] = useState<Accessory[]>([])
   const [loading, setLoading] = useState(true)
   const { accessory_names } = useConfigurationStore()
+  const router = useRouter()
 
   useEffect(() => {
     // Track step start
@@ -68,6 +70,15 @@ export default function AccessoriesPage() {
       accessori_count: newNames.length,
       accessori_prezzo_totale: totalPrice,
     })
+
+    // 🎯 AUTO-AVANZAMENTO: Se seleziona 1 accessorio, passa subito allo step successivo
+    // Questo semplifica la compilazione per il cliente
+    if (!isSelected && newNames.length === 1) {
+      // Piccolo delay per dare feedback visivo
+      setTimeout(() => {
+        router.push('/configurator/contacts')
+      }, 800)
+    }
   }
 
   if (loading) {
@@ -86,8 +97,11 @@ export default function AccessoriesPage() {
       <div className="space-y-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4">Accessori</h2>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-lg mb-2">
             Seleziona gli accessori per personalizzare la tua pergola (opzionale)
+          </p>
+          <p className="text-sm text-primary/80 font-medium">
+            💡 Seleziona un accessorio per passare automaticamente allo step successivo
           </p>
         </div>
 

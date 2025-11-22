@@ -1,98 +1,149 @@
 # 🖼️ Immagini Pavimentazioni - Riferimento
 
-## 📋 Immagini Aggiornate per Step 5 (Pavimentazione)
+## 📋 Immagini Configurate per Step 5 (Pavimentazione)
 
-### 1️⃣ **Decking in Legno**
-- **Nome**: Decking in Legno
-- **Descrizione**: Pavimentazione in legno naturale trattato per esterni
-- **Immagine**: `https://images.unsplash.com/photo-1615876234886-fd9a39fda97f?w=800&h=600&fit=crop&q=80`
-- **Contenuto**: Pavimento in legno naturale per esterni, perfetto per terrazze e pergole
-- **Colore dominante**: Marrone legno naturale
-- **Stile**: Naturale, caldo, accogliente
+### 1️⃣ **TERRA/GIARDINO**
+- **Nome**: TERRA/GIARDINO
+- **Descrizione**: Installazione diretta sul terreno naturale con livellamento e preparazione del sottofondo.
+- **Immagine**: `https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/terra-giardino.jpg`
+- **Contenuto**: Installazione su terreno naturale per giardini
+- **Tipo**: Installazione diretta su terra
+- **Stile**: Naturale, rustico, da giardino
 
-### 2️⃣ **Piastrelle Gres**
-- **Nome**: Piastrelle Gres
-- **Descrizione**: Pavimentazione in gres porcellanato antiscivolo
-- **Immagine**: `https://images.unsplash.com/photo-1615971677499-5467cbab01c0?w=800&h=600&fit=crop&q=80`
-- **Contenuto**: Pavimento in piastrelle moderne di gres porcellanato
-- **Colore dominante**: Grigio/beige moderno
-- **Stile**: Contemporaneo, elegante, pulito
+### 2️⃣ **TERRAZZA**
+- **Nome**: TERRAZZA
+- **Descrizione**: Montaggio su pavimentazione esistente, ideale per balconi e terrazze già finite.
+- **Immagine**: `https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/terrazza.jpg`
+- **Contenuto**: Montaggio su pavimento esistente
+- **Tipo**: Sovrapposizione su pavimento finito
+- **Stile**: Pratico, veloce, non invasivo
 
-### 3️⃣ **Ghiaia Decorativa**
-- **Nome**: Ghiaia Decorativa
-- **Descrizione**: Pavimentazione in ghiaia colorata drenante
-- **Immagine**: `https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&h=600&fit=crop&q=80`
-- **Contenuto**: Ghiaia decorativa bianca/grigia per giardini
-- **Colore dominante**: Bianco/grigio chiaro
-- **Stile**: Zen, minimalista, drenante
+### 3️⃣ **CEMENTO**
+- **Nome**: CEMENTO
+- **Descrizione**: Installazione su massetto cementizio, soluzione robusta e duratura.
+- **Immagine**: `https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/cemento.jpg`
+- **Contenuto**: Installazione su massetto in cemento
+- **Tipo**: Base cementizia robusta
+- **Stile**: Industriale, resistente, duraturo
+
+### 4️⃣ **LEGNO/WPC**
+- **Nome**: LEGNO/WPC
+- **Descrizione**: Installazione su pavimentazione in legno o decking preesistente.
+- **Immagine**: `https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/legno-wpc.jpg`
+- **Contenuto**: Installazione su decking in legno o WPC
+- **Tipo**: Su pavimento in legno composito
+- **Stile**: Caldo, naturale, elegante
+
+### 5️⃣ **GRES/MATTONELLE**
+- **Nome**: GRES/MATTONELLE
+- **Descrizione**: Posa su pavimento in gres porcellanato con fissaggi adeguati.
+- **Immagine**: `https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/gres-mattonelle.jpg`
+- **Contenuto**: Installazione su piastrelle in gres
+- **Tipo**: Su pavimento piastrellato
+- **Stile**: Moderno, pulito, elegante
+
+### 6️⃣ **RESINA**
+- **Nome**: RESINA
+- **Descrizione**: Montaggio su pavimento in resina continua, moderno e impermeabile.
+- **Immagine**: `https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/resina.jpg`
+- **Contenuto**: Installazione su pavimento in resina
+- **Tipo**: Su pavimento resinato continuo
+- **Stile**: Contemporaneo, impermeabile, minimal
 
 ---
 
 ## 🎯 Caratteristiche Immagini
 
 ### Specifiche Tecniche:
-- **Fonte**: Unsplash (immagini royalty-free ad alta qualità)
-- **Dimensioni**: 800x600px (ottimizzate per web)
-- **Formato**: JPEG ottimizzato
-- **Qualità**: 80% (bilanciamento qualità/dimensione)
-- **Aspect Ratio**: 4:3 (ideale per card)
+- **Fonte**: Supabase Storage (immagini caricate nel tuo bucket)
+- **Formato**: JPEG/JPG
+- **Storage**: `flooring-images` bucket (pubblico)
+- **URL Base**: `https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/`
+- **Aspect Ratio**: Variabile (ottimizzato per card)
 
 ### Vantaggi:
 - ✅ Immagini reali professionali
 - ✅ Alta qualità visiva
-- ✅ Coordinate con le descrizioni
+- ✅ Coordinate con le descrizioni pergole
 - ✅ Coerenti nello stile
-- ✅ Ottimizzate per caricamento veloce
-- ✅ Royalty-free (Unsplash License)
+- ✅ Nel tuo storage (controllo completo)
+- ✅ 6 opzioni diverse (più scelta per clienti)
 
 ---
 
-## 🔄 Come Aggiornare il Database
+## 🔄 Stato Database
 
-### Opzione 1: Script SQL Diretto
-Esegui il file `scripts/update_flooring_images.sql` su Supabase:
+### ✅ Immagini Già Configurate
+Le immagini sono **già presenti e configurate** nel database Supabase. Non serve eseguire script di update.
+
+### 📋 Dati Attuali
+Il database contiene già le 6 pavimentazioni con le immagini corrette:
 
 ```sql
--- Copia/incolla il contenuto nel SQL Editor di Supabase
--- Clicca "Run"
+SELECT name, image_url 
+FROM configuratorelegno_flooring_types 
+ORDER BY created_at;
 ```
 
-### Opzione 2: Update Manuale
-Vai su Supabase Dashboard → Table Editor → `configuratorelegno_flooring_types`
+Risultato atteso:
+1. TERRA/GIARDINO → terra-giardino.jpg ✅
+2. TERRAZZA → terrazza.jpg ✅
+3. CEMENTO → cemento.jpg ✅
+4. LEGNO/WPC → legno-wpc.jpg ✅
+5. GRES/MATTONELLE → gres-mattonelle.jpg ✅
+6. RESINA → resina.jpg ✅
 
-Aggiorna manualmente ogni riga:
-1. **Decking in Legno**: copia URL da riga 19 del seed file
-2. **Piastrelle Gres**: copia URL da riga 20 del seed file
-3. **Ghiaia Decorativa**: copia URL da riga 21 del seed file
+### 🔧 Se Serve Ripristinare
+Solo in caso di problemi, esegui `scripts/update_flooring_images.sql` per ripristinare i valori corretti.
 
 ---
 
-## 📸 Preview Immagini
+## 📸 URL Immagini Complete
 
-### Decking in Legno
-![Decking](https://images.unsplash.com/photo-1615876234886-fd9a39fda97f?w=400&h=300&fit=crop&q=80)
-*Pavimento in legno naturale per esterni*
+### 1. TERRA/GIARDINO
+```
+https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/terra-giardino.jpg
+```
 
-### Piastrelle Gres
-![Gres](https://images.unsplash.com/photo-1615971677499-5467cbab01c0?w=400&h=300&fit=crop&q=80)
-*Piastrelle in gres porcellanato moderno*
+### 2. TERRAZZA
+```
+https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/terrazza.jpg
+```
 
-### Ghiaia Decorativa
-![Ghiaia](https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=300&fit=crop&q=80)
-*Ghiaia decorativa per giardini*
+### 3. CEMENTO
+```
+https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/cemento.jpg
+```
+
+### 4. LEGNO/WPC
+```
+https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/legno-wpc.jpg
+```
+
+### 5. GRES/MATTONELLE
+```
+https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/gres-mattonelle.jpg
+```
+
+### 6. RESINA
+```
+https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/resina.jpg
+```
 
 ---
 
 ## ✅ Checklist Implementazione
 
-- [x] Immagini selezionate (Unsplash)
-- [x] URL ottimizzati con parametri (w=800, h=600, q=80)
-- [x] Script SQL creato (`update_flooring_images.sql`)
+- [x] Immagini caricate su Supabase Storage
+- [x] Database aggiornato con 6 pavimentazioni
+- [x] URL corretti configurati
+- [x] Script SQL aggiornato (`update_flooring_images.sql`)
 - [x] Seed data aggiornato (`002_seed_data.sql`)
-- [x] Documentazione creata (questo file)
-- [ ] Script SQL eseguito su Supabase
-- [ ] Verifica visiva su frontend
-- [ ] Test caricamento immagini
+- [x] Documentazione aggiornata (questo file)
+- [x] Immagini verificate accessibili (HTTP 200)
+- [x] Progetto aggiornato con nuovi dati
+- [ ] Verifica visiva su frontend (testa ora!)
+- [ ] Test selezione + auto-navigazione
 
 ---
 

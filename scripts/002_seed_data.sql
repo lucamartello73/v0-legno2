@@ -15,9 +15,9 @@ ON CONFLICT (name) DO NOTHING;
 
 -- Insert flooring types
 INSERT INTO configuratorelegno_flooring_types (name, description, image_url) VALUES
-('Decking in Legno', 'Pavimentazione in legno naturale trattato per esterni', '/placeholder.svg?height=200&width=300'),
-('Piastrelle Gres', 'Pavimentazione in gres porcellanato antiscivolo', '/placeholder.svg?height=200&width=300'),
-('Ghiaia Decorativa', 'Pavimentazione in ghiaia colorata drenante', '/placeholder.svg?height=200&width=300')
+('Decking in Legno', 'Pavimentazione in legno naturale trattato per esterni', 'https://images.unsplash.com/photo-1615876234886-fd9a39fda97f?w=800&h=600&fit=crop&q=80'),
+('Piastrelle Gres', 'Pavimentazione in gres porcellanato antiscivolo', 'https://images.unsplash.com/photo-1615971677499-5467cbab01c0?w=800&h=600&fit=crop&q=80'),
+('Ghiaia Decorativa', 'Pavimentazione in ghiaia colorata drenante', 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&h=600&fit=crop&q=80')
 ON CONFLICT (name) DO NOTHING;
 
 -- Insert accessories with prices

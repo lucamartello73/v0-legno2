@@ -16,6 +16,7 @@ import { VercelAnalytics } from "@/lib/vercel-analytics-integration"
 export default function AccessoriesPage() {
   const [accessories, setAccessories] = useState<Accessory[]>([])
   const [loading, setLoading] = useState(true)
+  const [autoAdvanceTimeout, setAutoAdvanceTimeout] = useState<NodeJS.Timeout | null>(null)
   const { accessory_names } = useConfigurationStore()
   const router = useRouter()
 
@@ -36,12 +37,25 @@ export default function AccessoriesPage() {
     }
 
     fetchAccessories()
-  }, [])
+
+    // Cleanup: cancella timeout quando il componente viene smontato
+    return () => {
+      if (autoAdvanceTimeout) {
+        clearTimeout(autoAdvanceTimeout)
+      }
+    }
+  }, [autoAdvanceTimeout])
 
   const handleAccessoryToggle = (accessory: Accessory) => {
     const isSelected = accessory_names.includes(accessory.name)
     let newIds: string[] = []
     let newNames: string[] = []
+
+    // Cancella timeout precedente se esiste
+    if (autoAdvanceTimeout) {
+      clearTimeout(autoAdvanceTimeout)
+      setAutoAdvanceTimeout(null)
+    }
 
     if (!isSelected) {
       newNames = [...accessory_names, accessory.name]
@@ -71,13 +85,14 @@ export default function AccessoriesPage() {
       accessori_prezzo_totale: totalPrice,
     })
 
-    // 🎯 AUTO-AVANZAMENTO: Se seleziona 1 accessorio, passa subito allo step successivo
-    // Questo semplifica la compilazione per il cliente
+    // 🎯 AUTO-AVANZAMENTO: Se seleziona 1 accessorio, avanza dopo 2 secondi
+    // Questo dà tempo al cliente di selezionare altri accessori se vuole
+    // Se clicca un altro accessorio entro 2 secondi, il timeout viene cancellato
     if (!isSelected && newNames.length === 1) {
-      // Piccolo delay per dare feedback visivo
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         router.push('/configurator/contacts')
-      }, 800)
+      }, 2000) // 2 secondi per dare tempo al cliente
+      setAutoAdvanceTimeout(timeout)
     }
   }
 
@@ -101,7 +116,7 @@ export default function AccessoriesPage() {
             Seleziona gli accessori per personalizzare la tua pergola (opzionale)
           </p>
           <p className="text-sm text-primary/80 font-medium">
-            💡 Seleziona un accessorio per passare automaticamente allo step successivo
+            💡 Seleziona 1 accessorio per avanzare automaticamente • Seleziona più accessori per vedere tutte le opzioni
           </p>
         </div>
 
@@ -167,6 +182,15 @@ export default function AccessoriesPage() {
                   </Badge>
                 ))}
               </div>
+              {accessory_names.length === 1 && autoAdvanceTimeout && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-800 font-medium">
+                    ⏱️ Avanzamento automatico tra 2 secondi...
+                    <br />
+                    <span className="text-xs">Seleziona altri accessori per annullare</span>
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}

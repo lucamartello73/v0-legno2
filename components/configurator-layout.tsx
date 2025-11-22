@@ -45,18 +45,18 @@ export function ConfiguratorLayout({ children, currentStep, nextHref, prevHref }
   }, [currentStep])
 
   return (
-    <div className="min-h-screen bg-[#F5F1E8]">
+    <div className="min-h-screen bg-[#F8F8F8]">
       <Header />
       <WhatsAppButton />
       <TrackingAbandonmentHandler />
 
-      <div className="pt-24 pb-12">
-        <div className="container mx-auto px-6 max-w-4xl">
+      <div className="pt-32 pb-12">
+        <div className="container mx-auto px-4 max-w-4xl">
           {/* Progress Header */}
-          <div className="mb-8 bg-black/20 backdrop-blur-sm rounded-lg p-6 border-white/20">
+          <div className="mb-8 bg-white rounded-2xl p-6 shadow-md border border-gray-100">
             <div className="flex items-center justify-between mb-4">
-              <h1 className="text-2xl font-bold text-white">Configuratore Pergole</h1>
-              <span className="text-sm text-white/90">
+              <h1 className="text-2xl font-bold text-gray-900">Configuratore Pergole in Legno</h1>
+              <span className="text-sm text-gray-600">
                 Step {currentStep} di {steps.length}
               </span>
             </div>
@@ -69,19 +69,19 @@ export function ConfiguratorLayout({ children, currentStep, nextHref, prevHref }
                   key={step.number}
                   className={`flex flex-col items-center ${
                     step.number === currentStep
-                      ? "text-white"
+                      ? "text-[#6AB52B]"
                       : step.number < currentStep
-                        ? "text-white/90"
-                        : "text-white/80"
+                        ? "text-[#6AB52B]"
+                        : "text-gray-400"
                   }`}
                 >
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mb-2 ${
                       step.number === currentStep
-                        ? "bg-[#E91E63] text-white"
+                        ? "bg-[#6AB52B] text-white"
                         : step.number < currentStep
-                          ? "bg-[#E91E63] text-white"
-                          : "bg-black/40 text-white border border-white/30"
+                          ? "bg-[#6AB52B] text-white"
+                          : "bg-gray-200 text-gray-500 border border-gray-300"
                     }`}
                   >
                     {step.number}
@@ -93,7 +93,7 @@ export function ConfiguratorLayout({ children, currentStep, nextHref, prevHref }
           </div>
 
           {/* Main Content */}
-          <div className="bg-white/95 backdrop-blur-sm border-white/20 rounded-lg shadow-lg p-6 md:p-8 mb-8">
+          <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 md:p-8 mb-8">
             {children}
           </div>
 
@@ -104,7 +104,7 @@ export function ConfiguratorLayout({ children, currentStep, nextHref, prevHref }
                 <Button
                   asChild
                   variant="outline"
-                  className="bg-black/30 border-white/40 text-white hover:bg-black/40 backdrop-blur-sm"
+                  className="border-[#6AB52B] text-[#6AB52B] hover:bg-[#E8F5E0]"
                 >
                   <Link href={prevHref}>
                     <ChevronLeft className="mr-2 h-4 w-4" />
@@ -117,7 +117,7 @@ export function ConfiguratorLayout({ children, currentStep, nextHref, prevHref }
               {nextHref && (
                 <Button
                   asChild
-                  className="bg-[#3E2723] hover:bg-[#2C1810] text-white"
+                  className="bg-[#6AB52B] hover:bg-[#5A9823] text-white transition-colors"
                   disabled={!isStepValid(currentStep)}
                 >
                   <Link href={nextHref}>

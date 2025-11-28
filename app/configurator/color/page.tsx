@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ConfiguratorLayout } from "@/components/configurator-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,6 +10,9 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useConfigurationStore } from "@/lib/store"
 import { colorPalettes, type ColorCategory } from "@/lib/types"
+import { trackColorSelected, startStepTimer, trackStepDuration } from "@/lib/vercel-analytics-tracking"
+import { updateConfigurationTracking } from "@/lib/configuration-tracking"
+import { VercelAnalytics } from "@/lib/vercel-analytics-integration"
 
 export default function ColorPage() {
   const { color_category, color_name, setColor, isStepValid, color_value } = useConfigurationStore()
@@ -17,7 +20,34 @@ export default function ColorPage() {
   const [showCustomInput, setShowCustomInput] = useState<Record<string, boolean>>({})
   const router = useRouter()
 
+  useEffect(() => {
+    // Track step start
+    startStepTimer()
+    VercelAnalytics.trackStepReached(3, 'colore')
+  }, [])
+
   const handleColorSelect = (category: ColorCategory, colorName: string, colorValue: string) => {
+    // Track color selection
+    trackColorSelected(colorName, category)
+    trackStepDuration(3, 'colore')
+    VercelAnalytics.trackColorSelected(colorName, category)
+    
+    // Track in nostro sistema (Supabase)
+    const trackingData: any = {
+      step_reached: 3,
+    }
+    if (category === 'struttura') {
+      trackingData.colore_struttura_nome = colorName
+      trackingData.colore_struttura_value = colorValue
+    } else if (category === 'tetto') {
+      trackingData.colore_tetto_nome = colorName
+      trackingData.colore_tetto_value = colorValue
+    } else if (category === 'telo') {
+      trackingData.colore_telo_nome = colorName
+      trackingData.colore_telo_value = colorValue
+    }
+    updateConfigurationTracking(trackingData)
+    
     setColor(category, colorName, colorValue)
     // Reset custom color inputs when selecting predefined colors
     setCustomColors((prev) => ({ ...prev, [category]: "" }))
@@ -32,6 +62,27 @@ export default function ColorPage() {
   const handleCustomColorSelect = (category: ColorCategory) => {
     const customColorValue = customColors[category]
     if (customColorValue?.trim()) {
+      // Track custom color selection
+      trackColorSelected("Colore Personalizzato", category)
+      trackStepDuration(3, 'colore')
+      VercelAnalytics.trackColorSelected("Colore Personalizzato", category)
+      
+      // Track in nostro sistema
+      const trackingData: any = {
+        step_reached: 3,
+      }
+      if (category === 'struttura') {
+        trackingData.colore_struttura_nome = "Colore Personalizzato"
+        trackingData.colore_struttura_value = customColorValue
+      } else if (category === 'tetto') {
+        trackingData.colore_tetto_nome = "Colore Personalizzato"
+        trackingData.colore_tetto_value = customColorValue
+      } else if (category === 'telo') {
+        trackingData.colore_telo_nome = "Colore Personalizzato"
+        trackingData.colore_telo_value = customColorValue
+      }
+      updateConfigurationTracking(trackingData)
+      
       setColor(category, "Colore Personalizzato", customColorValue)
       
       // AUTO-NAVIGAZIONE anche per colori custom

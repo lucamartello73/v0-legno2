@@ -15,9 +15,12 @@ ON CONFLICT (name) DO NOTHING;
 
 -- Insert flooring types
 INSERT INTO configuratorelegno_flooring_types (name, description, image_url) VALUES
-('Decking in Legno', 'Pavimentazione in legno naturale trattato per esterni', '/placeholder.svg?height=200&width=300'),
-('Piastrelle Gres', 'Pavimentazione in gres porcellanato antiscivolo', '/placeholder.svg?height=200&width=300'),
-('Ghiaia Decorativa', 'Pavimentazione in ghiaia colorata drenante', '/placeholder.svg?height=200&width=300')
+('TERRA/GIARDINO', 'Installazione diretta sul terreno naturale con livellamento e preparazione del sottofondo.', 'https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/terra-giardino.jpg'),
+('TERRAZZA', 'Montaggio su pavimentazione esistente, ideale per balconi e terrazze già finite.', 'https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/terrazza.jpg'),
+('CEMENTO', 'Installazione su massetto cementizio, soluzione robusta e duratura.', 'https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/cemento.jpg'),
+('LEGNO/WPC', 'Installazione su pavimentazione in legno o decking preesistente.', 'https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/legno-wpc.jpg'),
+('GRES/MATTONELLE', 'Posa su pavimento in gres porcellanato con fissaggi adeguati.', 'https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/gres-mattonelle.jpg'),
+('RESINA', 'Montaggio su pavimento in resina continua, moderno e impermeabile.', 'https://diymukpvccuauohylrnz.supabase.co/storage/v1/object/public/flooring-images/resina.jpg')
 ON CONFLICT (name) DO NOTHING;
 
 -- Insert accessories with prices

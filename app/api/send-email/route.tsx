@@ -1,66 +1,40 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
+import { sendMultipleGmailEmails } from "@/lib/email/gmail-transport"
 
 const supabaseUrl = process.env.SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
-async function sendEmailWithSendWith(to: string, subject: string, body: string) {
+async function sendEmailWithGmail(to: string, subject: string, body: string) {
   try {
-    console.log("[v0] Attempting to send email via SendWith to:", to)
-    console.log("[v0] Using sender email: info@martello1930.net")
+    console.log("📧 [Gmail] Attempting to send email to:", to)
+    console.log("📝 [Gmail] Subject:", subject)
 
-    const emailPayload = {
-      message: {
-        to: [
-          {
-            email: to,
-          },
-        ],
-        from: {
-          email: "info@martello1930.net",
-        },
-        subject: subject,
-        body: body,
+    // Convert plain text body to HTML if needed
+    const htmlBody = body.includes("<") ? body : `<pre style="font-family: Arial, sans-serif; white-space: pre-wrap;">${body}</pre>`
+
+    const result = await sendMultipleGmailEmails([
+      {
+        to,
+        subject,
+        html: htmlBody,
+        text: body,
       },
+    ])
+
+    const emailResult = result[0]
+
+    if (emailResult.success) {
+      console.log("✅ [Gmail] Email sent successfully!")
+      console.log("📬 [Gmail] Message ID:", emailResult.messageId)
+      return { success: true, method: "gmail", messageId: emailResult.messageId }
+    } else {
+      console.error("❌ [Gmail] Email sending failed:", emailResult.error)
+      throw new Error(`Gmail sending error: ${emailResult.error}`)
     }
-
-    console.log("[v0] SendWith payload prepared:", JSON.stringify(emailPayload, null, 2))
-
-    const response = await fetch("https://app.sendwith.email/api/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer 7d4db474cad47167840902714f1dbc8583792fb2c077e935bf21292331776b54",
-      },
-      body: JSON.stringify(emailPayload),
-    })
-
-    console.log("[v0] SendWith API response status:", response.status)
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error("[v0] SendWith API error details:", {
-        status: response.status,
-        statusText: response.statusText,
-        body: errorText,
-        headers: Object.fromEntries(response.headers.entries()),
-      })
-
-      // Check for specific authentication errors
-      if (response.status === 400 && errorText.includes("No authenticated users")) {
-        console.error("[v0] CRITICAL: Email info@martello1930.net is not authenticated in SendWith dashboard")
-        console.error("[v0] SOLUTION: Verify email in SendWith dashboard or use alternative sender")
-      }
-
-      throw new Error(`SendWith API error: ${response.status} ${errorText}`)
-    }
-
-    const result = await response.json()
-    console.log("[v0] SendWith email sent successfully:", result)
-    return { success: true, method: "sendwith", result }
   } catch (error) {
-    console.error("[v0] SendWith email error:", error)
-    return { success: false, error: error.message }
+    console.error("❌ [Gmail] Email error:", error)
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" }
   }
 }
 
@@ -152,12 +126,69 @@ export async function POST(request: NextRequest) {
       throw error
     }
 
-    console.log("[v0] Configuration saved successfully:", data[0]?.id)
+    console.log("✅ Configuration saved successfully:", data[0]?.id)
 
+    // ========================================
+    // SALVA RICHIESTA CON TRACKING
+    // ========================================
+    console.log("📝 Creating richiesta with tracking...")
+    
+    const richiestaData = {
+      configurazione_id: data[0]?.id,
+      
+      // Dati cliente
+      cliente_nome: body.contact_data?.nome || "",
+      cliente_cognome: body.contact_data?.cognome || "",
+      cliente_email: body.contact_data?.email || "",
+      cliente_telefono: body.contact_data?.telefono || "",
+      
+      // Tipo richiesta
+      tipo_richiesta: "preventivo",
+      servizio_richiesto: body.service_type || "fai_da_te",
+      necessita_installazione: body.service_type === "installazione_completa",
+      
+      // Preferenze
+      preferenza_contatto: body.contact_preference || "email",
+      urgenza: "normale",
+      
+      // Pricing
+      prezzo_configuratore: body.total_price || 0,
+      prezzo_quotato: body.total_price || 0,
+      
+      // Note
+      note_cliente: body.contact_data?.note || null,
+      
+      // Stato iniziale
+      stato: "nuova",
+      priorita: "normale",
+      
+      // Fonte
+      fonte_richiesta: "Configuratore Web",
+      
+      // Timestamp
+      data_richiesta: new Date().toISOString(),
+    }
+
+    const { data: richiestaInserted, error: richiestaError } = await supabase
+      .from("configuratorelegno_richieste")
+      .insert([richiestaData])
+      .select()
+
+    if (richiestaError) {
+      console.error("⚠️  Richiesta tracking error (non-blocking):", richiestaError)
+      // Non bloccare il processo se il tracking fallisce
+    } else {
+      console.log("✅ Richiesta created with tracking:", richiestaInserted[0]?.id)
+      console.log("📋 Codice preventivo:", richiestaInserted[0]?.codice_preventivo)
+    }
+
+    const codicePreventivo = richiestaInserted?.[0]?.codice_preventivo || ""
+    
     const customerConfirmationContent = `
       Gentile ${body.contact_data?.nome},
       
-      La ringraziamo per aver utilizzato il nostro configuratore pergole.
+      La ringraziamo per aver utilizzato il nostro CONFIGURATORE PERGOLE LEGNO.
+      ${codicePreventivo ? `\n      CODICE PREVENTIVO: ${codicePreventivo}\n` : ""}
       
       RIEPILOGO CONFIGURAZIONE:
       • Tipo: ${body.type_name}
@@ -170,13 +201,15 @@ export async function POST(request: NextRequest) {
       ${body.accessory_names?.length ? `• Accessori: ${body.accessory_names.join(", ")}` : ""}
       
       Il nostro team la contatterà entro 24 ore tramite ${body.contact_preference === "email" ? "email" : body.contact_preference === "telefono" ? "telefono" : "email o telefono"}.
+      ${codicePreventivo ? `\nPer qualsiasi comunicazione, indicare il codice preventivo: ${codicePreventivo}\n` : ""}
       
       Cordiali saluti,
       MARTELLO 1930 - Dal 1930, Tradizione Italiana
     `
 
     const adminNotificationContent = `
-      Nuova richiesta di preventivo ricevuta:
+      🏛️ CONFIGURATORE PERGOLE LEGNO - Nuova richiesta di preventivo ricevuta:
+      ${codicePreventivo ? `\n      📋 CODICE PREVENTIVO: ${codicePreventivo}\n` : ""}
       
       Cliente: ${body.contact_data?.nome} ${body.contact_data?.cognome}
       Email: ${body.contact_data?.email}
@@ -204,22 +237,22 @@ export async function POST(request: NextRequest) {
     let emailMethod = "none"
 
     if (body.contact_data?.email) {
-      console.log("[v0] Initiating customer email sending process...")
+      console.log("📧 [Gmail] Initiating customer email sending process...")
 
-      const customerEmailResult = await sendEmailWithSendWith(
+      const customerEmailResult = await sendEmailWithGmail(
         body.contact_data.email,
-        "Conferma Richiesta Preventivo - MARTELLO 1930",
+        "CONFIGURATORE PERGOLE LEGNO - Conferma Richiesta Preventivo - MARTELLO 1930",
         customerConfirmationContent,
       )
 
       if (customerEmailResult.success) {
         customerEmailSent = true
-        console.log("[v0] ✅ Customer email sent successfully via SendWith")
+        console.log("✅ [Gmail] Customer email sent successfully")
       } else {
-        console.log("[v0] ⚠️ Customer email SendWith failed, activating internal confirmation system")
+        console.log("⚠️ [Gmail] Customer email failed, activating internal confirmation system")
         const confirmationResult = await logCustomerConfirmation(
           body.contact_data.email,
-          "Conferma Richiesta Preventivo - MARTELLO 1930",
+          "CONFIGURATORE PERGOLE LEGNO - Conferma Richiesta Preventivo - MARTELLO 1930",
           customerConfirmationContent,
           `${body.contact_data?.nome} ${body.contact_data?.cognome}`.trim() || "Cliente",
         )
@@ -227,25 +260,29 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    console.log("[v0] Initiating admin notification email sending process...")
+    console.log("📧 [Gmail] Initiating admin notification email sending process...")
 
-    const adminEmailResult = await sendEmailWithSendWith(
-      "info@martello1930.net",
-      `Nuova Richiesta Preventivo - ${body.contact_data?.nome} ${body.contact_data?.cognome}`,
+    // Get admin email from environment variable or use default
+    const adminEmail = process.env.ADMIN_EMAIL || "preventivi@martello1930.net"
+    console.log("📧 [Gmail] Admin email target:", adminEmail)
+
+    const adminEmailResult = await sendEmailWithGmail(
+      adminEmail,
+      `CONFIGURATORE PERGOLE LEGNO - Nuova Richiesta Preventivo - ${body.contact_data?.nome} ${body.contact_data?.cognome}`,
       adminNotificationContent,
     )
 
     if (adminEmailResult.success) {
       adminEmailSent = true
-      console.log("[v0] ✅ Admin notification email sent successfully via SendWith")
+      console.log("✅ [Gmail] Admin notification email sent successfully")
     } else {
-      console.log("[v0] ⚠️ Admin notification email SendWith failed")
+      console.log("⚠️ [Gmail] Admin notification email failed")
     }
 
     if (customerEmailSent && adminEmailSent) {
-      emailMethod = "sendwith_both"
+      emailMethod = "gmail_both"
     } else if (customerEmailSent || adminEmailSent) {
-      emailMethod = "sendwith_partial"
+      emailMethod = "gmail_partial"
     } else if (confirmationLogged) {
       emailMethod = "internal"
     } else {
@@ -253,18 +290,18 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(
-      `[v0] Email status - Customer: ${customerEmailSent ? "✅ sent" : confirmationLogged ? "⚠️ logged internally" : "❌ failed"}, Admin: ${adminEmailSent ? "✅ sent" : "❌ failed"}`,
+      `📊 [Gmail] Email status - Customer: ${customerEmailSent ? "✅ sent" : confirmationLogged ? "⚠️ logged internally" : "❌ failed"}, Admin: ${adminEmailSent ? "✅ sent" : "❌ failed"}`,
     )
 
     // Create admin notification in database
     const { error: notificationError } = await supabase.from("configuratorelegno_notifications").insert({
       type: "new_quote",
       category: "quote_request",
-      title: `Nuova Richiesta Preventivo - ${body.contact_data?.nome} ${body.contact_data?.cognome}`,
+      title: `CONFIGURATORE PERGOLE LEGNO - Nuova Richiesta Preventivo - ${body.contact_data?.nome} ${body.contact_data?.cognome}`,
       message: adminNotificationContent,
       configuration_id: data[0]?.id,
       recipient_type: "admin",
-      recipient_email: "info@martello1930.net",
+      recipient_email: adminEmail,
       recipient_name: "MARTELLO 1930",
       priority: 2,
       send_email: adminEmailSent,
@@ -312,7 +349,7 @@ export async function POST(request: NextRequest) {
         "Il nostro team esaminerà la tua richiesta e ti contatterà entro 24 ore per discutere i dettagli e fornirti un preventivo personalizzato.",
     })
   } catch (error) {
-    console.error("[v0] Error processing quote request:", error)
+    console.error("❌ Error processing quote request:", error)
 
     return NextResponse.json(
       {

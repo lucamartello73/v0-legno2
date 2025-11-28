@@ -10,6 +10,8 @@ import { Check } from "lucide-react"
 import { useConfigurationStore } from "@/lib/store"
 import { createClient } from "@/lib/supabase/client"
 import type { FlooringType } from "@/lib/types"
+import { updateConfigurationTracking } from "@/lib/configuration-tracking"
+import { VercelAnalytics } from "@/lib/vercel-analytics-integration"
 
 export default function FlooringPage() {
   const [flooringTypes, setFlooringTypes] = useState<FlooringType[]>([])
@@ -18,6 +20,9 @@ export default function FlooringPage() {
   const router = useRouter()
 
   useEffect(() => {
+    // Track step start
+    VercelAnalytics.trackStepReached(5, 'pavimentazione')
+    
     async function fetchFlooringTypes() {
       const supabase = createClient()
       const { data, error } = await supabase.from("configuratorelegno_flooring_types").select("*").order("created_at")
@@ -44,6 +49,16 @@ export default function FlooringPage() {
       // Replace any previous selection with the new one
       newNames = [flooring.name]
       
+      // Track selection
+      VercelAnalytics.trackFlooringSelected(newNames)
+      
+      // Track in nostro sistema (Supabase)
+      updateConfigurationTracking({
+        step_reached: 5,
+        pavimentazione_nomi: newNames,
+        pavimentazione_count: newNames.length,
+      })
+      
       // AUTO-NAVIGAZIONE: Passa automaticamente allo step successivo dopo selezione
       setTimeout(() => {
         router.push("/configurator/accessories")
@@ -53,7 +68,15 @@ export default function FlooringPage() {
     setFlooring(newNames, newNames)
   }
 
-  const hasImages = flooringTypes.some((flooring) => flooring.image_url && flooring.image_url !== "/placeholder.svg")
+  // Migliora il rilevamento: mostra card se ALMENO UNA ha immagine valida
+  // Cambiato da some() per essere più permissivo
+  const hasImages = flooringTypes.length > 0 && flooringTypes.some((flooring) => {
+    const url = flooring.image_url
+    return url && 
+           url !== "/placeholder.svg" && 
+           url !== "" && 
+           url.trim().length > 0
+  })
 
   if (loading) {
     return (
@@ -89,11 +112,19 @@ export default function FlooringPage() {
                   onClick={() => handleFlooringToggle(flooring)}
                 >
                   <CardHeader>
-                    <div className="aspect-video rounded-lg overflow-hidden mb-4">
+                    <div className="aspect-video rounded-lg overflow-hidden mb-4 bg-muted">
                       <img
                         src={flooring.image_url || "/placeholder.svg"}
                         alt={flooring.name}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback se immagine esterna non carica
+                          const target = e.target as HTMLImageElement
+                          target.onerror = null // Previeni loop
+                          target.src = "/placeholder.svg"
+                          console.warn(`⚠️  Immagine non caricata per ${flooring.name}: ${flooring.image_url}`)
+                        }}
+                        loading="lazy"
                       />
                     </div>
                     <div className="flex items-center justify-between">

@@ -110,12 +110,29 @@ export default function FooterMartello1930() {
         </div>
       </div>
 
-      {/* Copyright */}
+      {/* Copyright e Link Legali */}
       <div className="border-t border-white/20">
         <div className="container mx-auto px-4 py-6">
-          <div className="text-center text-sm text-white/80">
-            <p>© {new Date().getFullYear()} Martello 1930. Tutti i diritti riservati.</p>
-            <p className="mt-1">Strutture in legno dal 1930 • Qualità artigianale italiana</p>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/80">
+            <div className="text-center md:text-left">
+              <p>© {new Date().getFullYear()} Martello 1930. Tutti i diritti riservati.</p>
+              <p className="mt-1">Strutture in legno dal 1930 • Qualità artigianale italiana</p>
+            </div>
+            <div className="flex items-center gap-4 text-center">
+              <span>P.IVA: 01234567890</span>
+              <Link 
+                href="/privacy-policy" 
+                className="hover:text-white transition-colors"
+              >
+                Privacy Policy
+              </Link>
+              <Link 
+                href="/cookie-policy" 
+                className="hover:text-white transition-colors"
+              >
+                Cookie Policy
+              </Link>
+            </div>
           </div>
         </div>
       </div>

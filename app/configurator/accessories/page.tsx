@@ -16,7 +16,6 @@ import { VercelAnalytics } from "@/lib/vercel-analytics-integration"
 export default function AccessoriesPage() {
   const [accessories, setAccessories] = useState<Accessory[]>([])
   const [loading, setLoading] = useState(true)
-  const [autoAdvanceTimeout, setAutoAdvanceTimeout] = useState<NodeJS.Timeout | null>(null)
   const { accessory_names } = useConfigurationStore()
   const router = useRouter()
 
@@ -37,44 +36,31 @@ export default function AccessoriesPage() {
     }
 
     fetchAccessories()
+  }, [])
 
-    // Cleanup: cancella timeout quando il componente viene smontato
-    return () => {
-      if (autoAdvanceTimeout) {
-        clearTimeout(autoAdvanceTimeout)
-      }
-    }
-  }, [autoAdvanceTimeout])
-
-  const handleAccessoryToggle = (accessory: Accessory) => {
-    const isSelected = accessory_names.includes(accessory.name)
+  const handleAccessorySelect = (accessory: Accessory | null) => {
+    // 🎯 SELEZIONE SINGOLA: sostituisce completamente la selezione precedente
     let newIds: string[] = []
     let newNames: string[] = []
+    let totalPrice = 0
 
-    // Cancella timeout precedente se esiste
-    if (autoAdvanceTimeout) {
-      clearTimeout(autoAdvanceTimeout)
-      setAutoAdvanceTimeout(null)
+    if (accessory) {
+      // Seleziona solo questo accessorio (selezione singola)
+      newIds = [accessory.id]
+      newNames = [accessory.name]
+      totalPrice = accessory.price || 0
     }
-
-    if (!isSelected) {
-      newNames = [...accessory_names, accessory.name]
-      newIds = [...accessory_names, accessory.id]
-    } else {
-      newNames = accessory_names.filter((name) => name !== accessory.name)
-      newIds = accessory_names.filter((name) => name !== accessory.name)
-    }
+    // Se accessory è null, deseleziona tutto (opzione "Nessun accessorio")
 
     useConfigurationStore.getState().setAccessories(newIds, newNames)
     
     // Track accessories selection
-    const selectedAccessories = accessories.filter(a => newNames.includes(a.name))
-    const totalPrice = selectedAccessories.reduce((sum, a) => sum + (a.price || 0), 0)
-    
-    VercelAnalytics.trackAccessoriesSelected(
-      selectedAccessories.map(a => ({ name: a.name, price: a.price || 0 })),
-      totalPrice
-    )
+    if (accessory) {
+      VercelAnalytics.trackAccessoriesSelected(
+        [{ name: accessory.name, price: accessory.price || 0 }],
+        totalPrice
+      )
+    }
     
     // Track in nostro sistema (Supabase)
     updateConfigurationTracking({
@@ -85,15 +71,11 @@ export default function AccessoriesPage() {
       accessori_prezzo_totale: totalPrice,
     })
 
-    // 🎯 AUTO-AVANZAMENTO: Se seleziona 1 accessorio, avanza dopo 2 secondi
-    // Questo dà tempo al cliente di selezionare altri accessori se vuole
-    // Se clicca un altro accessorio entro 2 secondi, il timeout viene cancellato
-    if (!isSelected && newNames.length === 1) {
-      const timeout = setTimeout(() => {
-        router.push('/configurator/contacts')
-      }, 2000) // 2 secondi per dare tempo al cliente
-      setAutoAdvanceTimeout(timeout)
-    }
+    // 🚀 AVANZAMENTO IMMEDIATO dopo selezione
+    // Ritardo di 800ms per dare feedback visivo
+    setTimeout(() => {
+      router.push('/configurator/contacts')
+    }, 800)
   }
 
   if (loading) {
@@ -113,12 +95,25 @@ export default function AccessoriesPage() {
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4">Accessori</h2>
           <p className="text-muted-foreground text-lg mb-2">
-            Seleziona gli accessori per personalizzare la tua pergola (opzionale)
+            Scegli un accessorio per la tua pergola
           </p>
           <p className="text-sm text-primary/80 font-medium">
-            💡 Seleziona 1 accessorio per avanzare automaticamente • Seleziona più accessori per vedere tutte le opzioni
+            💡 Clicca su un accessorio per selezionarlo e passare al prossimo step
           </p>
         </div>
+
+        {/* Opzione: Nessun Accessorio */}
+        <Card
+          className="transition-all duration-300 hover-lift cursor-pointer hover:shadow-lg border-2 border-dashed mb-6"
+          onClick={() => handleAccessorySelect(null)}
+        >
+          <CardContent className="py-8 text-center">
+            <h3 className="text-xl font-semibold mb-2">Nessun Accessorio</h3>
+            <p className="text-muted-foreground">
+              Procedi senza aggiungere accessori alla tua pergola
+            </p>
+          </CardContent>
+        </Card>
 
         <div className="grid md:grid-cols-2 gap-6">
           {accessories.map((accessory) => {
@@ -130,7 +125,7 @@ export default function AccessoriesPage() {
                 className={`transition-all duration-300 hover-lift cursor-pointer ${
                   isSelected ? "ring-2 ring-primary bg-primary/5" : "hover:shadow-lg"
                 }`}
-                onClick={() => handleAccessoryToggle(accessory)}
+                onClick={() => handleAccessorySelect(accessory)}
               >
                 <CardHeader>
                   <div className="aspect-video rounded-lg overflow-hidden mb-4">
@@ -142,24 +137,11 @@ export default function AccessoriesPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg">{accessory.name}</CardTitle>
-                    <Button
-                      variant={isSelected ? "default" : "outline"}
-                      size="sm"
-                      className={`min-w-[100px] ${isSelected ? "bg-primary text-primary-foreground" : ""}`}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleAccessoryToggle(accessory)
-                      }}
-                    >
-                      {isSelected ? (
-                        <>
-                          <Check className="w-4 h-4 mr-2" />
-                          Selezionato
-                        </>
-                      ) : (
-                        "Seleziona"
-                      )}
-                    </Button>
+                    {accessory.price && (
+                      <Badge variant="secondary" className="text-base font-semibold">
+                        €{accessory.price.toFixed(2)}
+                      </Badge>
+                    )}
                   </div>
                   <CardDescription className="mb-3">{accessory.description}</CardDescription>
                 </CardHeader>
@@ -168,39 +150,7 @@ export default function AccessoriesPage() {
           })}
         </div>
 
-        {accessory_names.length > 0 && (
-          <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/30 shadow-lg">
-            <CardContent className="pt-6">
-              <h4 className="font-semibold text-lg mb-4 flex items-center">
-                <Check className="w-5 h-5 mr-2 text-primary" />
-                Accessori Selezionati ({accessory_names.length})
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {accessory_names.map((name) => (
-                  <Badge key={name} variant="default" className="px-3 py-1">
-                    {name}
-                  </Badge>
-                ))}
-              </div>
-              {accessory_names.length === 1 && autoAdvanceTimeout && (
-                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-800 font-medium">
-                    ⏱️ Avanzamento automatico tra 2 secondi...
-                    <br />
-                    <span className="text-xs">Seleziona altri accessori per annullare</span>
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
 
-        {accessory_names.length === 0 && (
-          <div className="text-center text-muted-foreground py-8">
-            <p className="text-lg">Nessun accessorio selezionato</p>
-            <p className="text-sm mt-1">Clicca su un accessorio per selezionarlo</p>
-          </div>
-        )}
       </div>
     </ConfiguratorLayout>
   )
